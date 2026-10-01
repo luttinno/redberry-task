@@ -27,9 +27,15 @@ button {
   flex-direction: column;
   padding: 30px clamp(24px, 5vw, 76px) 32px;
   background:
-    linear-gradient(90deg, rgba(4, 10, 17, .87) 0%, rgba(4, 10, 17, .34) 58%, rgba(4, 10, 17, .1) 100%),
-    linear-gradient(0deg, rgba(4, 8, 17, .92) 0%, transparent 50%),
-    url('https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?auto=format&fit=crop&w=2200&q=85') center 44% / cover,
+    linear-gradient(
+      90deg,
+      rgba(4, 10, 17, 0.87) 0%,
+      rgba(4, 10, 17, 0.34) 58%,
+      rgba(4, 10, 17, 0.1) 100%
+    ),
+    linear-gradient(0deg, rgba(4, 8, 17, 0.92) 0%, transparent 50%),
+    url("https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?auto=format&fit=crop&w=2200&q=85")
+      center 44% / cover,
     #10232c;
 }
 
@@ -51,7 +57,7 @@ button {
   color: #f4f5f8;
   font-size: 17px;
   font-weight: 800;
-  letter-spacing: .04em;
+  letter-spacing: 0.04em;
   text-decoration: none;
 }
 
@@ -64,7 +70,7 @@ button {
 }
 
 .main-nav a {
-  color: rgba(245, 246, 251, .72);
+  color: rgba(245, 246, 251, 0.72);
   font-size: 13px;
   text-decoration: none;
 }
@@ -79,6 +85,15 @@ button {
   margin-left: auto;
 }
 
+.session-status {
+  max-width: 180px;
+  overflow: hidden;
+  color: rgba(245, 246, 251, 0.82);
+  font-size: 12px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 .button {
   min-height: 38px;
   padding: 0 19px;
@@ -86,7 +101,9 @@ button {
   border-radius: 22px;
   font-size: 12px;
   font-weight: 700;
-  transition: background .18s ease, transform .18s ease;
+  transition:
+    background 0.18s ease,
+    transform 0.18s ease;
 }
 
 .button:hover {
@@ -103,6 +120,13 @@ button {
   background: #df2916;
 }
 
+.submit-button:disabled,
+.close-button:disabled,
+.button:disabled {
+  cursor: not-allowed;
+  opacity: 0.62;
+}
+
 .button-light {
   color: #121725;
   background: #f1f2f5;
@@ -117,7 +141,7 @@ button {
   color: #fa452e;
   font-size: 11px;
   font-weight: 800;
-  letter-spacing: .14em;
+  letter-spacing: 0.14em;
 }
 
 .scene-copy h1 {
@@ -129,7 +153,7 @@ button {
 
 .scene-copy p {
   margin: 0 0 24px;
-  color: rgba(245, 246, 251, .74);
+  color: rgba(245, 246, 251, 0.74);
   font-size: 15px;
 }
 
@@ -140,10 +164,10 @@ button {
 .scene-bottom {
   gap: 18px;
   margin-top: auto;
-  color: rgba(245, 246, 251, .68);
+  color: rgba(245, 246, 251, 0.68);
   font-size: 10px;
   font-weight: 700;
-  letter-spacing: .09em;
+  letter-spacing: 0.09em;
 }
 
 .scene-rule {
@@ -151,7 +175,7 @@ button {
   flex: 1;
   overflow: hidden;
   border-radius: 4px;
-  background: rgba(255, 255, 255, .32);
+  background: rgba(255, 255, 255, 0.32);
 }
 
 .scene-rule i {
@@ -170,7 +194,7 @@ button {
   position: fixed;
   z-index: 2;
   inset: 0;
-  background: rgba(3, 6, 14, .68);
+  background: rgba(3, 6, 14, 0.68);
   backdrop-filter: blur(3px);
 }
 
@@ -184,7 +208,7 @@ button {
   border: 1px solid #2a2c3d;
   border-radius: 16px;
   background: #070c1c;
-  box-shadow: 0 20px 50px -10px rgba(0, 0, 0, .72);
+  box-shadow: 0 20px 50px -10px rgba(0, 0, 0, 0.72);
   transform: translate(-50%, -50%);
 }
 
@@ -275,7 +299,9 @@ button {
   color: #f5f5f8;
   background: #202232;
   font-size: 11px;
-  transition: border-color .16s ease, background .16s ease;
+  transition:
+    border-color 0.16s ease,
+    background 0.16s ease;
 }
 
 .field input::placeholder {
@@ -341,7 +367,7 @@ button {
   background: #fa321b;
   font-size: 12px;
   font-weight: 750;
-  transition: background .18s ease;
+  transition: background 0.18s ease;
 }
 
 .switch-copy {
@@ -434,6 +460,42 @@ button {
   color: #ff927f;
   font-size: 10px;
   text-align: center;
+}
+
+.session-notice {
+  position: fixed;
+  z-index: 2;
+  right: 24px;
+  bottom: 24px;
+  display: flex;
+  max-width: min(480px, calc(100vw - 32px));
+  align-items: center;
+  gap: 14px;
+  padding: 14px 16px;
+  border: 1px solid #3a3d4e;
+  border-radius: 10px;
+  color: #f4f5fa;
+  background: #101527;
+  box-shadow: 0 14px 32px rgba(0, 0, 0, 0.3);
+  font-size: 12px;
+}
+
+.session-notice > span {
+  flex: 1;
+}
+
+.session-notice button {
+  padding: 4px;
+  border: 0;
+  color: #ff5a42;
+  background: transparent;
+  font-weight: 700;
+}
+
+.session-notice .notice-close {
+  color: #c9cad2;
+  font-size: 18px;
+  line-height: 1;
 }
 
 @media (max-width: 560px) {

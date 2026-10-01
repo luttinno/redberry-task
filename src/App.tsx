@@ -1,113 +1,191 @@
-import { useEffect, useRef, useState } from "react";
-import { useForm, useWatch } from "react-hook-form";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm, useWatch, type UseFormRegisterReturn } from "react-hook-form";
+import { Link, Navigate, Route, Routes, useParams } from "react-router-dom";
+import { mapApiErrors } from "./features/forms/mapApiErrors";
+import { useAuth } from "./features/auth/context/useAuth";
+import HomePage from "./features/home/HomePage";
+import { rememberMovieVisit } from "./features/home/recentlyViewed";
+import ProfilePage from "./features/profile/ProfilePage";
+import {
+  loginSchema,
+  registerSchema,
+  type LoginFormValues,
+  type RegisterFormValues,
+} from "./features/auth/validation/authSchemas";
 import "./App.css";
 
-type AuthMode = "login" | "signup";
-
-type LoginFields = {
-  email: string;
-  password: string;
-};
-
-type SignupFields = {
-  username: string;
-  email: string;
-  password: string;
-  confirmation: string;
-};
-
 function App() {
-  const [mode, setMode] = useState<AuthMode>("login");
-  const [isOpen, setIsOpen] = useState(true);
-  const [avatar, setAvatar] = useState<string | null>(null);
-  const [notice, setNotice] = useState("");
+  const {
+    token,
+    status,
+    modal,
+    notice,
+    loginPending,
+    registerPending,
+    openAuth: showAuth,
+    closeAuth: dismissAuth,
+    clearNotice,
+    login,
+    register,
+    retrySessionRestore,
+  } = useAuth();
+  const isOpen = modal !== null;
+  const mode = modal === "register" ? "signup" : "login";
+  const [formNotice, setFormNotice] = useState("");
+  const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
+  const avatarPreviewRef = useRef<string | null>(null);
   const panelRef = useRef<HTMLElement>(null);
-  const loginForm = useForm<LoginFields>({ mode: "onBlur" });
-  const signupForm = useForm<SignupFields>({ mode: "onBlur" });
+
+  const loginForm = useForm<LoginFormValues>({
+    resolver: zodResolver(loginSchema),
+    mode: "onBlur",
+    defaultValues: { email: "", password: "" },
+  });
+  const signupForm = useForm<RegisterFormValues>({
+    resolver: zodResolver(registerSchema),
+    mode: "onBlur",
+    defaultValues: {
+      username: "",
+      email: "",
+      password: "",
+      confirmation: "",
+      avatar: undefined,
+    },
+  });
   const loginValues = useWatch({ control: loginForm.control });
   const signupValues = useWatch({ control: signupForm.control });
 
-  const openAuth = (nextMode: AuthMode) => {
-    setMode(nextMode);
-    setIsOpen(true);
-    setNotice("");
+  const openAuth = (nextMode: "login" | "register") => {
+    loginForm.setValue("password", "");
+    signupForm.setValue("password", "");
+    signupForm.setValue("confirmation", "");
+    setFormNotice("");
+    clearNotice();
+    showAuth(nextMode);
   };
 
-  const closeAuth = () => {
-    setIsOpen(false);
-    setNotice("");
+  const closeAuth = useCallback(() => {
+    setFormNotice("");
+    dismissAuth();
+  }, [dismissAuth]);
+
+  const updateAvatarPreview = (file?: File) => {
+    if (avatarPreviewRef.current) URL.revokeObjectURL(avatarPreviewRef.current);
+    const preview = file ? URL.createObjectURL(file) : null;
+    avatarPreviewRef.current = preview;
+    setAvatarPreview(preview);
   };
 
-  const submitLogin = loginForm.handleSubmit(() => {
-    setNotice("Sign-in is not connected to the API yet.");
+  const submitLogin = loginForm.handleSubmit(async (values) => {
+    setFormNotice("");
+    clearNotice();
+    try {
+      await login(values);
+    } catch (error) {
+      setFormNotice(
+        mapApiErrors(error, loginForm.setError, {
+          email: "email",
+          password: "password",
+        }),
+      );
+    }
   });
 
-  const submitSignup = signupForm.handleSubmit(() => {
-    setNotice("Registration is not connected to the API yet.");
+  const submitSignup = signupForm.handleSubmit(async (values) => {
+    setFormNotice("");
+    clearNotice();
+    try {
+      await register({
+        username: values.username,
+        email: values.email,
+        password: values.password,
+        passwordConfirmation: values.confirmation,
+        avatar: values.avatar,
+      });
+    } catch (error) {
+      setFormNotice(
+        mapApiErrors(error, signupForm.setError, {
+          username: "username",
+          email: "email",
+          password: "password",
+          password_confirmation: "confirmation",
+          avatar: "avatar",
+        }),
+      );
+    }
   });
+
+  useEffect(
+    () => () => {
+      if (avatarPreviewRef.current)
+        URL.revokeObjectURL(avatarPreviewRef.current);
+    },
+    [],
+  );
 
   useEffect(() => {
     if (!isOpen) return;
-
     panelRef.current
       ?.querySelector<HTMLInputElement>('input:not([type="file"])')
       ?.focus();
     const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") closeAuth();
+      if (event.key === "Escape") {
+        closeAuth();
+        return;
+      }
+      if (event.key !== "Tab") return;
+
+      const focusable = panelRef.current?.querySelectorAll<HTMLElement>(
+        'button:not(:disabled), input:not(:disabled), [href], [tabindex]:not([tabindex="-1"])',
+      );
+      if (!focusable?.length) return;
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
     };
     document.addEventListener("keydown", handleKeyDown);
     return () => document.removeEventListener("keydown", handleKeyDown);
-  }, [isOpen]);
+  }, [closeAuth, isOpen, mode]);
 
   return (
-    <main className={`cinema-shell ${isOpen ? "has-modal" : ""}`}>
-      <div className="cinema-scene">
-        <header className="site-header">
-          <a className="brand" href="#home" aria-label="Kino XII home">
-            KINO <span>XII</span>
-          </a>
-          <nav className="main-nav" aria-label="Main navigation">
-            <a href="#movies">Movies</a>
-            <a href="#sessions">Sessions</a>
-          </nav>
-          <div className="header-actions">
-            <button
-              className="button button-primary"
-              onClick={() => openAuth("signup")}
-            >
-              Sign up
-            </button>
-            <button
-              className="button button-light"
-              onClick={() => openAuth("login")}
-            >
-              Log in
-            </button>
-          </div>
-        </header>
-        <div className="scene-copy">
-          <span className="eyebrow">THE CINEMA EXPERIENCE</span>
-          <h1>
-            Stories belong
-            <br />
-            on the big screen.
-          </h1>
-          <p>Find your next film. Make a night of it.</p>
+    <div className="relative min-h-screen">
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/movies/:movieId" element={<MovieRoutePlaceholder />} />
+        <Route
+          path="/sessions"
+          element={<PagePlaceholder title="Sessions" />}
+        />
+        <Route path="/profile" element={<ProfilePage />} />
+        <Route
+          path="/tickets"
+          element={<PagePlaceholder title="My tickets" />}
+        />
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
+
+      {notice && !isOpen && (
+        <aside className="session-notice" role="status">
+          <span>{notice}</span>
+          {token && status !== "authenticated" && (
+            <button onClick={() => void retrySessionRestore()}>Retry</button>
+          )}
           <button
-            className="button button-primary"
-            onClick={() => openAuth("signup")}
+            className="notice-close"
+            aria-label="Dismiss message"
+            onClick={clearNotice}
           >
-            Explore movies <span aria-hidden="true">↗</span>
+            ×
           </button>
-        </div>
-        <div className="scene-bottom">
-          <span>NOW SHOWING</span>
-          <div className="scene-rule">
-            <i />
-          </div>
-          <span>01 / 04</span>
-        </div>
-      </div>
+        </aside>
+      )}
 
       {isOpen && <div className="auth-backdrop" onClick={closeAuth} />}
       {isOpen && (
@@ -149,13 +227,7 @@ function App() {
                   loginValues.email &&
                   !loginForm.formState.errors.email,
                 )}
-                registration={loginForm.register("email", {
-                  required: "Email is required",
-                  pattern: {
-                    value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-                    message: "Enter a valid email address",
-                  },
-                })}
+                registration={loginForm.register("email")}
               />
               <Field
                 label="Password"
@@ -167,22 +239,27 @@ function App() {
                   loginValues.password &&
                   !loginForm.formState.errors.password,
                 )}
-                registration={loginForm.register("password", {
-                  required: "Password is required",
-                  minLength: { value: 3, message: "At least 3 characters" },
-                })}
+                registration={loginForm.register("password")}
               />
-              {notice && (
+              {(formNotice || notice) && (
                 <p className="form-notice" role="status">
-                  {notice}
+                  {formNotice || notice}
                 </p>
               )}
-              <button className="submit-button" type="submit">
-                Log in
+              <button
+                className="submit-button"
+                type="submit"
+                disabled={loginPending}
+              >
+                {loginPending ? "Logging in…" : "Log in"}
               </button>
               <p className="switch-copy">
                 Don’t have an account?{" "}
-                <button type="button" onClick={() => openAuth("signup")}>
+                <button
+                  type="button"
+                  disabled={loginPending}
+                  onClick={() => openAuth("register")}
+                >
                   Sign up
                 </button>
               </p>
@@ -197,17 +274,33 @@ function App() {
                 <input
                   type="file"
                   accept="image/jpeg,image/png,image/webp"
+                  aria-label="Upload avatar"
                   onChange={(event) => {
                     const file = event.target.files?.[0];
-                    if (file && file.size <= 2 * 1024 * 1024)
-                      setAvatar(URL.createObjectURL(file));
-                    else if (file)
-                      setNotice("Avatar must be an image under 2 MB.");
+                    const validation =
+                      registerSchema.shape.avatar.safeParse(file);
+                    if (file && !validation.success) {
+                      signupForm.setError("avatar", {
+                        type: "validate",
+                        message:
+                          validation.error.issues[0]?.message ??
+                          "Invalid avatar image",
+                      });
+                      signupForm.setValue("avatar", undefined);
+                      updateAvatarPreview();
+                      return;
+                    }
+                    signupForm.clearErrors("avatar");
+                    signupForm.setValue("avatar", file, {
+                      shouldValidate: true,
+                      shouldTouch: true,
+                    });
+                    updateAvatarPreview(file);
                   }}
                 />
                 <span className="avatar-preview">
-                  {avatar ? (
-                    <img src={avatar} alt="Avatar preview" />
+                  {avatarPreview ? (
+                    <img src={avatarPreview} alt="Avatar preview" />
                   ) : (
                     <span aria-hidden="true">+</span>
                   )}
@@ -217,6 +310,11 @@ function App() {
                   <small>JPG, PNG or WEBP · max 2 MB</small>
                 </span>
               </label>
+              {signupForm.formState.errors.avatar?.message && (
+                <small className="field-error" role="alert">
+                  {signupForm.formState.errors.avatar.message}
+                </small>
+              )}
               <Field
                 label="Username"
                 placeholder="Your username"
@@ -226,10 +324,7 @@ function App() {
                   signupValues.username &&
                   !signupForm.formState.errors.username,
                 )}
-                registration={signupForm.register("username", {
-                  required: "Username is required",
-                  minLength: { value: 3, message: "At least 3 characters" },
-                })}
+                registration={signupForm.register("username")}
               />
               <Field
                 label="Email"
@@ -241,13 +336,7 @@ function App() {
                   signupValues.email &&
                   !signupForm.formState.errors.email,
                 )}
-                registration={signupForm.register("email", {
-                  required: "Email is required",
-                  pattern: {
-                    value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-                    message: "Enter a valid email address",
-                  },
-                })}
+                registration={signupForm.register("email")}
               />
               <div className="field-pair">
                 <Field
@@ -260,10 +349,7 @@ function App() {
                     signupValues.password &&
                     !signupForm.formState.errors.password,
                   )}
-                  registration={signupForm.register("password", {
-                    required: "Password is required",
-                    minLength: { value: 3, message: "At least 3 characters" },
-                  })}
+                  registration={signupForm.register("password")}
                 />
                 <Field
                   label="Confirm password"
@@ -275,25 +361,28 @@ function App() {
                     signupValues.confirmation &&
                     !signupForm.formState.errors.confirmation,
                   )}
-                  registration={signupForm.register("confirmation", {
-                    required: "Please confirm your password",
-                    validate: (value) =>
-                      value === signupForm.getValues("password") ||
-                      "Passwords do not match",
-                  })}
+                  registration={signupForm.register("confirmation")}
                 />
               </div>
-              {notice && (
+              {(formNotice || notice) && (
                 <p className="form-notice" role="status">
-                  {notice}
+                  {formNotice || notice}
                 </p>
               )}
-              <button className="submit-button" type="submit">
-                Sign up
+              <button
+                className="submit-button"
+                type="submit"
+                disabled={registerPending}
+              >
+                {registerPending ? "Signing up…" : "Sign up"}
               </button>
               <p className="switch-copy">
                 Already have an account?{" "}
-                <button type="button" onClick={() => openAuth("login")}>
+                <button
+                  type="button"
+                  disabled={registerPending}
+                  onClick={() => openAuth("login")}
+                >
                   Log in
                 </button>
               </p>
@@ -301,6 +390,42 @@ function App() {
           )}
         </section>
       )}
+    </div>
+  );
+}
+
+function MovieRoutePlaceholder() {
+  const { movieId } = useParams();
+  const id = Number(movieId);
+
+  useEffect(() => {
+    if (Number.isInteger(id) && id > 0) rememberMovieVisit(id);
+  }, [id]);
+
+  return <PagePlaceholder title="Movie details" />;
+}
+
+function PagePlaceholder({ title }: { title: string }) {
+  return (
+    <main className="grid min-h-screen place-items-center bg-[#070c1c] px-6 text-white">
+      <div className="text-center">
+        <Link
+          to="/"
+          className="text-xs font-bold uppercase tracking-[.18em] text-[#ff604c]"
+        >
+          Kino XII
+        </Link>
+        <h1 className="mt-5 text-3xl font-black">{title}</h1>
+        <p className="mt-2 text-sm text-slate-400">
+          This page will be built from its design reference.
+        </p>
+        <Link
+          to="/"
+          className="mt-6 inline-flex rounded-full bg-white/10 px-5 py-2.5 text-xs font-bold hover:bg-white/20"
+        >
+          Back to home
+        </Link>
+      </div>
     </main>
   );
 }
@@ -311,7 +436,7 @@ type FieldProps = {
   placeholder?: string;
   error?: string;
   valid?: boolean;
-  registration: ReturnType<ReturnType<typeof useForm>["register"]>;
+  registration: UseFormRegisterReturn;
 };
 
 function Field({
