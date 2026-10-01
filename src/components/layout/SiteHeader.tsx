@@ -40,7 +40,7 @@ export default function SiteHeader({
       </nav>
       <form
         onSubmit={submitSearch}
-        className="order-3 flex h-9 w-full min-w-0 max-w-none items-center rounded-full border border-white/10 bg-white/[0.06] px-4 text-slate-400 focus-within:border-white/30 lg:order-none lg:ml-auto lg:max-w-[420px]"
+        className="order-3 flex h-9 w-full min-w-0 max-w-none items-center rounded-full border border-white/10 bg-white/6 px-4 text-slate-400 focus-within:border-white/30 lg:order-0 lg:ml-auto lg:max-w-105"
       >
         <label className="sr-only" htmlFor="site-search">
           Search movies
@@ -128,7 +128,7 @@ export default function SiteHeader({
                   : "Profile incomplete"}
               </div>
               {!user.profileComplete && (
-                <p className="mt-1 rounded-md bg-amber-500/[0.08] px-3 py-2 text-[10px] leading-4 text-slate-400">
+                <p className="mt-1 rounded-md bg-amber-500/8 px-3 py-2 text-[10px] leading-4 text-slate-400">
                   Please complete your profile to enable booking.
                 </p>
               )}

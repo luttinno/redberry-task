@@ -123,10 +123,10 @@ export default function ProfilePage() {
           onSearchChange={setSearch}
           onSearchSubmit={onSearchSubmit}
         />
-        <div className="mx-auto max-w-[1500px] animate-pulse px-6 py-10 sm:px-10">
+        <div className="mx-auto max-w-375 animate-pulse px-6 py-10 sm:px-10">
           <div className="h-6 w-40 rounded bg-white/10" />
-          <div className="mt-8 h-9 max-w-[540px] rounded bg-white/10" />
-          <div className="mt-8 h-72 max-w-[540px] rounded bg-white/[0.04]" />
+          <div className="mt-8 h-9 max-w-135 rounded bg-white/10" />
+          <div className="mt-8 h-72 max-w-135 rounded bg-white/4" />
         </div>
       </main>
     );
@@ -168,17 +168,17 @@ export default function ProfilePage() {
         onSearchChange={setSearch}
         onSearchSubmit={onSearchSubmit}
       />
-      <div className="mx-auto w-full max-w-[1500px] flex-1 px-6 pb-12 pt-4 sm:px-10 lg:px-12">
+      <div className="mx-auto w-full max-w-375 flex-1 px-6 pb-12 pt-4 sm:px-10 lg:px-12">
         <h1 className="text-lg font-black">My Profile</h1>
         <nav
-          className="mt-4 flex gap-6 border-b border-white/[0.08]"
+          className="mt-4 flex gap-6 border-b border-white/8"
           aria-label="Profile sections"
         >
           <NavLink
             to="/profile"
             end
             className={({ isActive }) =>
-              `relative pb-3 text-[10px] font-medium ${isActive ? "text-white after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-full after:bg-[#f23a23]" : "text-slate-400 hover:text-white"}`
+              `relative pb-3 text-[10px] font-medium ${isActive ? "text-white after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-full after:bg-[#f23a23]" : "text-slate-400 hover:text-white"}`
             }
           >
             Personal Information
@@ -186,14 +186,14 @@ export default function ProfilePage() {
           <NavLink
             to="/tickets"
             className={({ isActive }) =>
-              `relative pb-3 text-[10px] font-medium ${isActive ? "text-white after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-full after:bg-[#f23a23]" : "text-slate-400 hover:text-white"}`
+              `relative pb-3 text-[10px] font-medium ${isActive ? "text-white after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-full after:bg-[#f23a23]" : "text-slate-400 hover:text-white"}`
             }
           >
             My Tickets
           </NavLink>
         </nav>
 
-        <section className="max-w-[540px] pt-7">
+        <section className="max-w-135 pt-7">
           {!user.profileComplete && (
             <div
               className="mb-6 rounded-md border border-amber-300/20 bg-amber-300/[0.07] px-4 py-3 text-xs text-amber-200"
@@ -279,7 +279,7 @@ export default function ProfilePage() {
                 id="dateOfBirth"
                 type="date"
                 max={getMaxBirthDate()}
-                className={`${inputClass} [color-scheme:dark] ${form.formState.errors.dateOfBirth ? invalidInputClass : ""}`}
+                className={`${inputClass} scheme-dark ${form.formState.errors.dateOfBirth ? invalidInputClass : ""}`}
                 aria-invalid={Boolean(form.formState.errors.dateOfBirth)}
                 aria-describedby={
                   form.formState.errors.dateOfBirth

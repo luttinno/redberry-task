@@ -30,10 +30,10 @@ function TicketCard({
           <img
             src={movie.posterUrl}
             alt={`${movie.title} poster`}
-            className="aspect-[2/3] w-full rounded-lg object-cover sm:w-[100px]"
+            className="aspect-2/3 w-full rounded-lg object-cover sm:w-25"
           />
         ) : (
-          <div className="grid aspect-[2/3] w-full place-items-center rounded-lg bg-[#292e40] text-xs text-slate-500 sm:w-[100px]">
+          <div className="grid aspect-2/3 w-full place-items-center rounded-lg bg-[#292e40] text-xs text-slate-500 sm:w-25">
             Poster unavailable
           </div>
         )}
@@ -95,7 +95,7 @@ function TicketCard({
           </div>
         </div>
       </div>
-      <aside className="flex flex-col justify-center border-t border-white/[0.08] px-5 py-4 md:border-l md:border-t-0 md:px-6">
+      <aside className="flex flex-col justify-center border-t border-white/8 px-5 py-4 md:border-l md:border-t-0 md:px-6">
         <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
           Order
         </p>
@@ -186,17 +186,17 @@ export default function TicketsPage() {
         onSearchChange={setSearch}
         onSearchSubmit={onSearchSubmit}
       />
-      <div className="mx-auto w-full max-w-[1500px] flex-1 px-6 pb-12 pt-4 sm:px-10 lg:px-12">
+      <div className="mx-auto w-full max-w-375 flex-1 px-6 pb-12 pt-4 sm:px-10 lg:px-12">
         <h1 className="text-lg font-black">My Profile</h1>
         <nav
-          className="mt-4 flex gap-6 border-b border-white/[0.08]"
+          className="mt-4 flex gap-6 border-b border-white/8"
           aria-label="Profile sections"
         >
           <NavLink
             to="/profile"
             end
             className={({ isActive }) =>
-              `relative pb-3 text-[10px] font-medium ${isActive ? "text-white after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-full after:bg-[#f23a23]" : "text-slate-400 hover:text-white"}`
+              `relative pb-3 text-[10px] font-medium ${isActive ? "text-white after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-full after:bg-[#f23a23]" : "text-slate-400 hover:text-white"}`
             }
           >
             Personal Information
@@ -204,7 +204,7 @@ export default function TicketsPage() {
           <NavLink
             to="/tickets"
             className={({ isActive }) =>
-              `relative pb-3 text-[10px] font-medium ${isActive ? "text-white after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-full after:bg-[#f23a23]" : "text-slate-400 hover:text-white"}`
+              `relative pb-3 text-[10px] font-medium ${isActive ? "text-white after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-full after:bg-[#f23a23]" : "text-slate-400 hover:text-white"}`
             }
           >
             My Tickets
@@ -237,7 +237,7 @@ export default function TicketsPage() {
           </div>
 
           {status === "guest" ? (
-            <div className="rounded-lg border border-white/[0.08] bg-white/[0.03] px-6 py-12 text-center">
+            <div className="rounded-lg border border-white/8 bg-white/3 px-6 py-12 text-center">
               <p className="text-sm font-bold">Sign in to view your tickets</p>
               <button
                 type="button"
@@ -257,7 +257,7 @@ export default function TicketsPage() {
               ))}
             </div>
           ) : tickets.isError ? (
-            <div className="flex min-h-40 items-center justify-between gap-4 rounded-lg border border-white/10 bg-white/[0.03] px-5 py-4 text-sm text-slate-300">
+            <div className="flex min-h-40 items-center justify-between gap-4 rounded-lg border border-white/10 bg-white/3 px-5 py-4 text-sm text-slate-300">
               <span>
                 {tickets.error.message || "We couldn’t load your tickets."}
               </span>
@@ -282,7 +282,7 @@ export default function TicketsPage() {
               ))}
             </div>
           ) : (
-            <div className="rounded-lg border border-white/[0.08] bg-white/[0.03] px-6 py-12 text-center">
+            <div className="rounded-lg border border-white/8 bg-white/3 px-6 py-12 text-center">
               <p className="text-sm font-bold">No {filter} tickets</p>
               <p className="mt-2 text-xs text-slate-400">
                 {filter === "upcoming"

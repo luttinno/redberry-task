@@ -22,10 +22,10 @@ function formatReleaseDate(date: string) {
 
 function MovieCard({ movie }: { movie: Movie }) {
   return (
-    <article className="group w-[156px] shrink-0 sm:w-[230px] lg:w-[250px]">
+    <article className="group w-39 shrink-0 sm:w-57.5 lg:w-62.5">
       <Link
         to={`/movies/${movie.slug}`}
-        className="relative block aspect-[2/3] overflow-hidden rounded-lg bg-[#171b2b] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#fb432c]"
+        className="relative block aspect-2/3 overflow-hidden rounded-lg bg-[#171b2b] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#fb432c]"
         aria-label={`View ${movie.title}`}
       >
         <img
@@ -66,7 +66,7 @@ function MovieCard({ movie }: { movie: Movie }) {
 
 function SectionError({ onRetry }: { onRetry: () => void }) {
   return (
-    <div className="flex min-h-24 items-center justify-between gap-4 rounded-lg border border-white/10 bg-white/[0.03] px-5 py-4 text-sm text-slate-300">
+    <div className="flex min-h-24 items-center justify-between gap-4 rounded-lg border border-white/10 bg-white/3 px-5 py-4 text-sm text-slate-300">
       <span>We couldn’t load these movies.</span>
       <button
         className="font-bold text-[#ff604c] hover:text-white"
@@ -81,7 +81,7 @@ function SectionError({ onRetry }: { onRetry: () => void }) {
 function MovieSkeleton({ landscape = false }: { landscape?: boolean }) {
   return (
     <div
-      className={`animate-pulse rounded-lg bg-[#171b2b] ${landscape ? "h-28 min-w-[270px]" : "aspect-[2/3] min-w-[156px]"}`}
+      className={`animate-pulse rounded-lg bg-[#171b2b] ${landscape ? "h-28 min-w-67.5" : "aspect-2/3 min-w-39"}`}
     />
   );
 }
@@ -136,7 +136,7 @@ export default function HomePage() {
     <main className="min-h-screen bg-[#070c1c] text-white">
       <SiteHeader searchValue={search} onSearchChange={setSearch} />
 
-      <section className="relative isolate min-h-[500px] overflow-hidden sm:min-h-[580px]">
+      <section className="relative isolate min-h-125 overflow-hidden sm:min-h-145">
         {currentFeature ? (
           <img
             key={currentFeature.backdropUrl}
@@ -150,7 +150,7 @@ export default function HomePage() {
         <div className="absolute inset-0 -z-10 bg-[linear-gradient(90deg,rgba(5,10,19,.94)_0%,rgba(5,10,19,.72)_43%,rgba(5,10,19,.12)_100%)]" />
         <div className="absolute inset-0 -z-10 bg-[linear-gradient(0deg,#070c1c_0%,transparent_48%,rgba(5,10,19,.12)_100%)]" />
 
-        <div className="flex min-h-[500px] max-w-2xl flex-col justify-center px-6 pb-20 pt-12 sm:min-h-[580px] sm:px-10 lg:px-14">
+        <div className="flex min-h-125 max-w-2xl flex-col justify-center px-6 pb-20 pt-12 sm:min-h-145 sm:px-10 lg:px-14">
           {featured.isError ? (
             <div className="max-w-sm">
               <p className="text-sm text-slate-200">
@@ -270,7 +270,7 @@ export default function HomePage() {
       <div className="mx-auto max-w-[1800px] px-5 pb-20 sm:px-8 lg:px-12">
         {user && recentMovies.length > 0 && (
           <section
-            className="border-b border-white/[0.08] py-7"
+            className="border-b border-white/8 py-7"
             aria-labelledby="recent-title"
           >
             <div className="mb-4 flex items-center justify-between">
@@ -286,7 +286,7 @@ export default function HomePage() {
                 <Link
                   key={movie.id}
                   to={`/movies/${movie.slug}`}
-                  className="flex min-w-[210px] items-center gap-3 rounded-lg bg-[#181c2b] p-2.5 transition hover:bg-[#202437]"
+                  className="flex min-w-52.5 items-center gap-3 rounded-lg bg-[#181c2b] p-2.5 transition hover:bg-[#202437]"
                 >
                   <img
                     src={movie.posterUrl}
@@ -311,7 +311,7 @@ export default function HomePage() {
 
         <section
           id="now-playing"
-          className="border-b border-white/[0.08] py-8"
+          className="border-b border-white/8 py-8"
           aria-labelledby="now-title"
         >
           <div className="mb-5 flex items-baseline justify-between gap-4">
@@ -337,13 +337,13 @@ export default function HomePage() {
               ))}
             </div>
           ) : visibleNowPlaying.length ? (
-            <div className="flex gap-4 overflow-x-auto pb-3 [scrollbar-color:#35394b_transparent] [scrollbar-width:thin]">
+            <div className="flex gap-4 overflow-x-auto pb-3 [scrollbar-color:#35394b_transparent] scrollbar-thin">
               {visibleNowPlaying.map((movie) => (
                 <MovieCard key={movie.id} movie={movie} />
               ))}
             </div>
           ) : (
-            <p className="rounded-lg bg-white/[0.03] px-5 py-8 text-sm text-slate-400">
+            <p className="rounded-lg bg-white/3 px-5 py-8 text-sm text-slate-400">
               No matching films found.
             </p>
           )}
@@ -381,15 +381,15 @@ export default function HomePage() {
               ))}
             </div>
           ) : visibleComingSoon.length ? (
-            <div className="flex gap-3 overflow-x-auto pb-3 [scrollbar-color:#35394b_transparent] [scrollbar-width:thin]">
+            <div className="flex gap-3 overflow-x-auto pb-3 [scrollbar-color:#35394b_transparent] scrollbar-thin">
               {visibleComingSoon.map((movie) => (
                 <article
                   key={movie.id}
-                  className="flex min-w-[280px] basis-[360px] items-center gap-3 rounded-lg bg-[#181c2b] p-2.5 sm:basis-[390px]"
+                  className="flex min-w-70 basis-90 items-center gap-3 rounded-lg bg-[#181c2b] p-2.5 sm:basis-97.5"
                 >
                   <Link
                     to={`/movies/${movie.slug}`}
-                    className="h-[92px] w-[104px] shrink-0 overflow-hidden rounded-md bg-[#202436]"
+                    className="h-23 w-26 shrink-0 overflow-hidden rounded-md bg-[#202436]"
                   >
                     <img
                       src={movie.posterUrl}
@@ -439,13 +439,13 @@ export default function HomePage() {
               ))}
             </div>
           ) : (
-            <p className="rounded-lg bg-white/[0.03] px-5 py-8 text-sm text-slate-400">
+            <p className="rounded-lg bg-white/3 px-5 py-8 text-sm text-slate-400">
               No upcoming films found.
             </p>
           )}
         </section>
 
-        <footer className="flex items-center justify-between border-t border-white/[0.08] pt-5 text-[9px] text-slate-500">
+        <footer className="flex items-center justify-between border-t border-white/8 pt-5 text-[9px] text-slate-500">
           <Link to="/" className="font-black tracking-wide text-white">
             KINO <span className="text-[#f43b24]">XII</span>
           </Link>
