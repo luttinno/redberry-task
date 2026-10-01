@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
 import type { ReactNode } from "react";
-import { Link, NavLink, useNavigate } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import SiteFooter from "../../components/layout/SiteFooter";
 import SiteHeader from "../../components/layout/SiteHeader";
 import { mapApiErrors } from "../forms/mapApiErrors";
 import { useAuth } from "../auth/context/useAuth";
@@ -344,16 +345,5 @@ export default function ProfilePage() {
       </div>
       <SiteFooter />
     </main>
-  );
-}
-
-function SiteFooter() {
-  return (
-    <footer className="mx-auto flex w-full max-w-[1500px] items-center justify-between border-t border-white/[0.08] px-6 py-5 text-[9px] text-slate-500 sm:px-10 lg:px-12">
-      <Link to="/" className="font-black tracking-wide text-white">
-        KINO <span className="text-[#f43b24]">XII</span>
-      </Link>
-      <span>© 2026 Kino XII. All rights reserved.</span>
-    </footer>
   );
 }

@@ -25,7 +25,7 @@ export default function SiteHeader({
   };
 
   return (
-    <header className="relative z-20 mx-auto flex min-h-16 max-w-[1500px] items-center gap-8 px-5 sm:px-8 lg:px-12">
+    <header className="relative z-20 mx-auto flex min-h-16 max-w-[1800px] flex-wrap items-center gap-x-3 gap-y-2 px-5 py-3 sm:px-8 lg:flex-nowrap lg:gap-8 lg:px-12 lg:py-0">
       <Link
         to="/"
         className="shrink-0 text-[15px] font-black tracking-wide text-white"
@@ -37,13 +37,10 @@ export default function SiteHeader({
         <Link className="hover:text-white" to="/sessions">
           Sessions
         </Link>
-        <Link className="hover:text-white" to="/#now-playing">
-          Now playing
-        </Link>
       </nav>
       <form
         onSubmit={submitSearch}
-        className="ml-auto flex h-9 w-full max-w-[260px] items-center rounded-full border border-white/10 bg-white/[0.06] px-4 text-slate-400 focus-within:border-white/30"
+        className="order-3 flex h-9 w-full min-w-0 max-w-none items-center rounded-full border border-white/10 bg-white/[0.06] px-4 text-slate-400 focus-within:border-white/30 lg:order-none lg:ml-auto lg:max-w-[420px]"
       >
         <label className="sr-only" htmlFor="site-search">
           Search movies
@@ -75,40 +72,64 @@ export default function SiteHeader({
           >
             {user.avatar ? (
               <img
-                className="h-8 w-8 rounded-full object-cover"
+                className="h-9 w-9 rounded-md object-cover"
                 src={user.avatar}
                 alt=""
               />
             ) : (
-              <span className="grid h-8 w-8 place-items-center rounded-full bg-[#272a3a] text-xs font-bold text-white">
+              <span className="grid h-9 w-9 place-items-center rounded-md bg-[#272a3a] text-xs font-bold text-white">
                 {user.username.slice(0, 1).toUpperCase()}
               </span>
             )}
             <span
-              className={`h-2 w-2 rounded-full ${user.profileComplete ? "bg-emerald-400" : "bg-amber-400"}`}
+              className={`-ml-3 mt-6 h-2 w-2 rounded-full border border-[#070c1c] ${user.profileComplete ? "bg-emerald-400" : "bg-amber-400"}`}
+              aria-label={
+                user.profileComplete ? "Profile complete" : "Profile incomplete"
+              }
             />
             <span className="hidden text-[11px] text-slate-200 md:inline">
-              {user.username}
+              {user.fullName || user.username}
+            </span>
+            <span
+              className="hidden text-slate-400 md:inline"
+              aria-hidden="true"
+            >
+              {profileMenuOpen ? "⌃" : "⌄"}
             </span>
           </button>
           {profileMenuOpen && (
-            <div className="absolute right-0 top-12 w-60 rounded-lg border border-white/10 bg-[#0d1222] p-4 shadow-2xl">
-              <p className="text-sm font-bold">
-                {user.fullName || user.username}
-              </p>
-              <p className="mt-1 truncate text-[10px] text-slate-400">
-                {user.email}
-              </p>
+            <div className="absolute right-0 top-12 w-[min(300px,calc(100vw-32px))] rounded-xl border border-white/10 bg-[#080d1c] p-4 shadow-2xl">
+              <div className="flex items-center gap-3">
+                {user.avatar ? (
+                  <img
+                    className="h-10 w-10 rounded-md object-cover"
+                    src={user.avatar}
+                    alt=""
+                  />
+                ) : (
+                  <span className="grid h-10 w-10 shrink-0 place-items-center rounded-md bg-[#272a3a] text-xs font-bold text-white">
+                    {user.username.slice(0, 1).toUpperCase()}
+                  </span>
+                )}
+                <span className="min-w-0">
+                  <strong className="block truncate text-xs">
+                    {user.fullName || user.username}
+                  </strong>
+                  <span className="mt-1 block truncate text-[10px] text-slate-400">
+                    {user.email}
+                  </span>
+                </span>
+              </div>
               <div
-                className={`mt-4 rounded-md px-3 py-2 text-[10px] font-bold ${user.profileComplete ? "bg-emerald-500/10 text-emerald-300" : "bg-amber-500/10 text-amber-300"}`}
+                className={`mt-3 rounded-md px-3 py-2 text-[11px] font-bold ${user.profileComplete ? "bg-emerald-500/10 text-emerald-300" : "bg-amber-500/10 text-amber-300"}`}
               >
                 {user.profileComplete
-                  ? "Profile complete"
-                  : "Profile incomplete · booking disabled"}
+                  ? "Profile Complete  ✓"
+                  : "Profile incomplete"}
               </div>
               {!user.profileComplete && (
-                <p className="mt-2 text-[10px] leading-4 text-slate-400">
-                  Complete your profile to enable booking.
+                <p className="mt-1 rounded-md bg-amber-500/[0.08] px-3 py-2 text-[10px] leading-4 text-slate-400">
+                  Please complete your profile to enable booking.
                 </p>
               )}
               <div className="mt-3 grid gap-1 border-t border-white/10 pt-3 text-xs">

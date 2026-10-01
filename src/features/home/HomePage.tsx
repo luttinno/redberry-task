@@ -4,7 +4,7 @@ import SiteHeader from "../../components/layout/SiteHeader";
 import { useAuth } from "../auth/context/useAuth";
 import { useHomeMovies, useNotifyMovie } from "../movies/useHomeMovies";
 import type { Movie } from "../movies/types";
-import { getRecentMovieIds } from "./recentlyViewed";
+import { getRecentMovieSlugs } from "./recentlyViewed";
 
 function formatRuntime(minutes: number) {
   const hours = Math.floor(minutes / 60);
@@ -22,9 +22,9 @@ function formatReleaseDate(date: string) {
 
 function MovieCard({ movie }: { movie: Movie }) {
   return (
-    <article className="group min-w-0 flex-1 basis-[156px] sm:basis-[178px]">
+    <article className="group w-[156px] shrink-0 sm:w-[230px] lg:w-[250px]">
       <Link
-        to={`/movies/${movie.id}`}
+        to={`/movies/${movie.slug}`}
         className="relative block aspect-[2/3] overflow-hidden rounded-lg bg-[#171b2b] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#fb432c]"
         aria-label={`View ${movie.title}`}
       >
@@ -40,7 +40,7 @@ function MovieCard({ movie }: { movie: Movie }) {
       </Link>
       <div className="pt-3">
         <Link
-          to={`/movies/${movie.id}`}
+          to={`/movies/${movie.slug}`}
           className="line-clamp-1 text-sm font-bold text-white hover:text-[#ff604c]"
         >
           {movie.title}
@@ -112,8 +112,8 @@ export default function HomePage() {
     comingSoon.data?.filter((movie) =>
       movie.title.toLocaleLowerCase().includes(query),
     ) ?? [];
-  const recentMovies = getRecentMovieIds()
-    .map((id) => allMovies.find((movie) => movie.id === id))
+  const recentMovies = getRecentMovieSlugs()
+    .map((slug) => allMovies.find((movie) => movie.slug === slug))
     .filter((movie): movie is Movie => Boolean(movie));
 
   useEffect(() => {
@@ -136,7 +136,7 @@ export default function HomePage() {
     <main className="min-h-screen bg-[#070c1c] text-white">
       <SiteHeader searchValue={search} onSearchChange={setSearch} />
 
-      <section className="relative isolate mx-auto min-h-[420px] max-w-[1500px] overflow-hidden sm:min-h-[490px]">
+      <section className="relative isolate min-h-[500px] overflow-hidden sm:min-h-[580px]">
         {currentFeature ? (
           <img
             key={currentFeature.backdropUrl}
@@ -150,7 +150,7 @@ export default function HomePage() {
         <div className="absolute inset-0 -z-10 bg-[linear-gradient(90deg,rgba(5,10,19,.94)_0%,rgba(5,10,19,.72)_43%,rgba(5,10,19,.12)_100%)]" />
         <div className="absolute inset-0 -z-10 bg-[linear-gradient(0deg,#070c1c_0%,transparent_48%,rgba(5,10,19,.12)_100%)]" />
 
-        <div className="flex min-h-[420px] max-w-2xl flex-col justify-center px-6 pb-20 pt-12 sm:min-h-[490px] sm:px-10 lg:px-14">
+        <div className="flex min-h-[500px] max-w-2xl flex-col justify-center px-6 pb-20 pt-12 sm:min-h-[580px] sm:px-10 lg:px-14">
           {featured.isError ? (
             <div className="max-w-sm">
               <p className="text-sm text-slate-200">
@@ -195,7 +195,7 @@ export default function HomePage() {
               </p>
               <div className="mt-6 flex flex-wrap gap-3">
                 <Link
-                  to={`/movies/${currentFeature.id}`}
+                  to={`/movies/${currentFeature.slug}`}
                   className="rounded-full bg-[#f23a23] px-5 py-2.5 text-[11px] font-bold shadow-lg shadow-black/20 hover:bg-[#d92e1a]"
                 >
                   Buy tickets
@@ -267,7 +267,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      <div className="mx-auto max-w-[1500px] px-5 pb-20 sm:px-8 lg:px-12">
+      <div className="mx-auto max-w-[1800px] px-5 pb-20 sm:px-8 lg:px-12">
         {user && recentMovies.length > 0 && (
           <section
             className="border-b border-white/[0.08] py-7"
@@ -285,7 +285,7 @@ export default function HomePage() {
               {recentMovies.map((movie) => (
                 <Link
                   key={movie.id}
-                  to={`/movies/${movie.id}`}
+                  to={`/movies/${movie.slug}`}
                   className="flex min-w-[210px] items-center gap-3 rounded-lg bg-[#181c2b] p-2.5 transition hover:bg-[#202437]"
                 >
                   <img
@@ -388,7 +388,7 @@ export default function HomePage() {
                   className="flex min-w-[280px] basis-[360px] items-center gap-3 rounded-lg bg-[#181c2b] p-2.5 sm:basis-[390px]"
                 >
                   <Link
-                    to={`/movies/${movie.id}`}
+                    to={`/movies/${movie.slug}`}
                     className="h-[92px] w-[104px] shrink-0 overflow-hidden rounded-md bg-[#202436]"
                   >
                     <img
@@ -408,7 +408,7 @@ export default function HomePage() {
                       </span>
                     </div>
                     <Link
-                      to={`/movies/${movie.id}`}
+                      to={`/movies/${movie.slug}`}
                       className="mt-2 block line-clamp-2 text-[11px] font-bold leading-4 hover:text-[#ff604c]"
                     >
                       {movie.title}

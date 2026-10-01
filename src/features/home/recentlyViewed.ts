@@ -1,22 +1,22 @@
 const RECENT_KEY = "kino-xii-recent-movies";
 
-function readRecentIds(): number[] {
+function readRecentSlugs(): string[] {
   try {
     const stored = localStorage.getItem(RECENT_KEY);
-    return stored ? (JSON.parse(stored) as number[]) : [];
+    return stored ? (JSON.parse(stored) as string[]) : [];
   } catch {
     return [];
   }
 }
 
-export function rememberMovieVisit(movieId: number) {
+export function rememberMovieVisit(movieSlug: string) {
   const next = [
-    movieId,
-    ...readRecentIds().filter((id) => id !== movieId),
+    movieSlug,
+    ...readRecentSlugs().filter((slug) => slug !== movieSlug),
   ].slice(0, 6);
   localStorage.setItem(RECENT_KEY, JSON.stringify(next));
 }
 
-export function getRecentMovieIds() {
-  return readRecentIds();
+export function getRecentMovieSlugs() {
+  return readRecentSlugs();
 }

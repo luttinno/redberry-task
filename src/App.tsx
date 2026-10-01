@@ -7,6 +7,7 @@ import { useAuth } from "./features/auth/context/useAuth";
 import HomePage from "./features/home/HomePage";
 import { rememberMovieVisit } from "./features/home/recentlyViewed";
 import ProfilePage from "./features/profile/ProfilePage";
+import TicketsPage from "./features/profile/TicketsPage";
 import {
   loginSchema,
   registerSchema,
@@ -164,10 +165,7 @@ function App() {
           element={<PagePlaceholder title="Sessions" />}
         />
         <Route path="/profile" element={<ProfilePage />} />
-        <Route
-          path="/tickets"
-          element={<PagePlaceholder title="My tickets" />}
-        />
+        <Route path="/tickets" element={<TicketsPage />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
 
@@ -395,12 +393,11 @@ function App() {
 }
 
 function MovieRoutePlaceholder() {
-  const { movieId } = useParams();
-  const id = Number(movieId);
+  const { movieId: movieSlug } = useParams();
 
   useEffect(() => {
-    if (Number.isInteger(id) && id > 0) rememberMovieVisit(id);
-  }, [id]);
+    if (movieSlug) rememberMovieVisit(movieSlug);
+  }, [movieSlug]);
 
   return <PagePlaceholder title="Movie details" />;
 }
