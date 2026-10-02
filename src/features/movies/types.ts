@@ -42,3 +42,37 @@ export interface Movie {
   genres: MovieGenre[];
   formats: MovieFormat[];
 }
+
+export interface MovieDetail
+  extends Omit<Movie, "posterUrl" | "backdropUrl"> {
+  posterUrl: string | null;
+  backdropUrl: string | null;
+  synopsis: string;
+  director: string | null;
+  cast: string | null;
+  availableDates: unknown;
+}
+
+export interface MovieSession {
+  id: number;
+  startsAt: string;
+  date: string;
+  time: string;
+  timeBand: string;
+  price: number;
+  seatsLeft: number;
+  isSoldOut: boolean;
+  hall?: {
+    id?: number;
+    name?: string;
+    venue?: Venue;
+  };
+  venue?: Venue;
+  format?: MovieFormat;
+  language?: {
+    id: number;
+    slug: string;
+    name: string;
+  };
+  movie: Movie;
+}

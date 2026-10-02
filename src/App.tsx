@@ -5,7 +5,7 @@ import { Link, Navigate, Route, Routes, useParams } from "react-router-dom";
 import { mapApiErrors } from "./features/forms/mapApiErrors";
 import { useAuth } from "./features/auth/context/useAuth";
 import HomePage from "./features/home/HomePage";
-import { rememberMovieVisit } from "./features/home/recentlyViewed";
+import MovieDetailsPage from "./features/movies/MovieDetailsPage";
 import ProfilePage from "./features/profile/ProfilePage";
 import TicketsPage from "./features/profile/TicketsPage";
 import {
@@ -159,7 +159,11 @@ function App() {
     <div className="relative min-h-screen">
       <Routes>
         <Route path="/" element={<HomePage />} />
-        <Route path="/movies/:movieId" element={<MovieRoutePlaceholder />} />
+        <Route path="/movies/:movieId" element={<MovieDetailsPage />} />
+        <Route
+          path="/sessions/:sessionId/seats"
+          element={<SeatSelectionRoutePlaceholder />}
+        />
         <Route
           path="/sessions"
           element={<PagePlaceholder title="Sessions" />}
@@ -392,17 +396,23 @@ function App() {
   );
 }
 
-function MovieRoutePlaceholder() {
-  const { movieId: movieSlug } = useParams();
-
-  useEffect(() => {
-    if (movieSlug) rememberMovieVisit(movieSlug);
-  }, [movieSlug]);
-
-  return <PagePlaceholder title="Movie details" />;
+function SeatSelectionRoutePlaceholder() {
+  const { sessionId } = useParams();
+  return (
+    <PagePlaceholder
+      title="Seat selection"
+      description={`Session ${sessionId} is ready to book. Seat selection is not available yet.`}
+    />
+  );
 }
 
-function PagePlaceholder({ title }: { title: string }) {
+function PagePlaceholder({
+  title,
+  description = "This page will be built from its design reference.",
+}: {
+  title: string;
+  description?: string;
+}) {
   return (
     <main className="grid min-h-screen place-items-center bg-[#070c1c] px-6 text-white">
       <div className="text-center">
@@ -413,9 +423,7 @@ function PagePlaceholder({ title }: { title: string }) {
           Kino XII
         </Link>
         <h1 className="mt-5 text-3xl font-black">{title}</h1>
-        <p className="mt-2 text-sm text-slate-400">
-          This page will be built from its design reference.
-        </p>
+        <p className="mt-2 text-sm text-slate-400">{description}</p>
         <Link
           to="/"
           className="mt-6 inline-flex rounded-full bg-white/10 px-5 py-2.5 text-xs font-bold hover:bg-white/20"
