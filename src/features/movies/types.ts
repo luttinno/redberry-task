@@ -79,5 +79,10 @@ export interface MovieSession {
     slug: string;
     name: string;
   };
-  movie: Movie;
+  movie?: Movie;
+}
+
+export interface MovieSessionVenueGroup {
+  venue: Venue;
+  sessions: MovieSession[];
 }

@@ -2,7 +2,7 @@ import { apiRequest, type ApiEnvelope } from "./client";
 import type {
   Movie,
   MovieDetail,
-  MovieSession,
+  MovieSessionVenueGroup,
 } from "../features/movies/types";
 
 export const movieApi = {
@@ -32,9 +32,12 @@ export const movieApi = {
     return response.data;
   },
 
-  async getSessions(movieSlug: string, date: string): Promise<MovieSession[]> {
+  async getSessions(
+    movieSlug: string,
+    date: string,
+  ): Promise<MovieSessionVenueGroup[]> {
     const params = new URLSearchParams({ date });
-    const response = await apiRequest<ApiEnvelope<MovieSession[]>>(
+    const response = await apiRequest<ApiEnvelope<MovieSessionVenueGroup[]>>(
       `/movies/${encodeURIComponent(movieSlug)}/sessions?${params}`,
     );
     return response.data;

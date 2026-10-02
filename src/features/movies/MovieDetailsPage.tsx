@@ -6,7 +6,7 @@ import SiteHeader from "../../components/layout/SiteHeader";
 import { useAuth } from "../auth/context/useAuth";
 import { rememberMovieVisit } from "../home/recentlyViewed";
 import { getNextSevenDates } from "../sessions/sessionFilters";
-import type { MovieSession } from "./types";
+import type { MovieSession, MovieSessionVenueGroup } from "./types";
 import { useMovieDetail, useMovieSessions } from "./useMovieDetails";
 
 function getAge(dateOfBirth: string | null) {
@@ -43,12 +43,16 @@ function formatPrice(value: number) {
 }
 
 function groupSessions(sessions: MovieSession[]) {
-  const groups = new Map<string, { label: string; sessions: MovieSession[] }>();
+  const groups = new Map<
+    string,
+    { key: string; label: string; sessions: MovieSession[] }
+  >();
   sessions.forEach((session) => {
     const venue = session.venue ?? session.hall?.venue;
     const hallName = session.hall?.name;
     const key = `${venue?.id ?? venue?.slug ?? venue?.name ?? "venue"}-${session.hall?.id ?? hallName ?? session.id}`;
     const group = groups.get(key) ?? {
+      key,
       label:
         [venue?.name, hallName ? `Hall ${hallName}` : null]
           .filter(Boolean)
@@ -59,6 +63,15 @@ function groupSessions(sessions: MovieSession[]) {
     groups.set(key, group);
   });
   return [...groups.values()];
+}
+
+function flattenVenueSessions(groups: MovieSessionVenueGroup[]) {
+  return groups.flatMap((group) =>
+    group.sessions.map((session) => ({
+      ...session,
+      venue: session.venue ?? group.venue,
+    })),
+  );
 }
 
 function SessionCard({
@@ -117,7 +130,9 @@ export default function MovieDetailsPage() {
     status === "authenticated" &&
     age !== null &&
     Boolean(movie && age < movie.ageRating.minAge);
-  const sessionGroups = groupSessions(sessionsQuery.data ?? []);
+  const sessionGroups = groupSessions(
+    flattenVenueSessions(sessionsQuery.data ?? []),
+  );
 
   useEffect(() => {
     if (movieId) rememberMovieVisit(movieId);
@@ -318,7 +333,7 @@ export default function MovieDetailsPage() {
           ) : (
             <div className="mt-6 space-y-7">
               {sessionGroups.map((group) => (
-                <section key={group.label}>
+                <section key={group.key}>
                   <h3 className="mb-3 text-xs font-bold text-slate-200">
                     {group.label}
                   </h3>
