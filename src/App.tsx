@@ -6,6 +6,7 @@ import {
   useLocation,
   type Location as RouterLocation,
 } from "react-router-dom";
+import { ToastContainer } from "react-toastify";
 import { AuthModal } from "./features/auth/components/AuthModal";
 import { useAuth } from "./features/auth/context/useAuth";
 import HomePage from "./features/home/HomePage";
@@ -78,6 +79,15 @@ function App() {
       {isOpen && (
         <AuthModal mode={mode} onClose={closeAuth} onSwitchMode={showAuth} />
       )}
+      <ToastContainer
+        position="top-right"
+        autoClose={3500}
+        newestOnTop
+        closeOnClick
+        pauseOnFocusLoss
+        draggable
+        theme="dark"
+      />
     </div>
   );
 }

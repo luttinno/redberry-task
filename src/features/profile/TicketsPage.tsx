@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { Link, NavLink, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 import SiteFooter from "../../components/layout/SiteFooter";
 import SiteHeader from "../../components/layout/SiteHeader";
 import { ErrorState } from "../../components/ui/ErrorState";
@@ -170,6 +171,7 @@ export default function TicketsPage() {
       try {
         await refundMutation.mutateAsync(orderId);
         setConfirmOrder(null);
+        toast.success("Refund processed successfully.");
       } catch (error) {
         if (error instanceof ApiError && error.status === 401) throw error;
         setRefundError(

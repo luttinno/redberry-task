@@ -6,6 +6,7 @@ import {
   type ReactNode,
 } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { toast } from "react-toastify";
 import { authApi } from "../../../api/auth";
 import { ApiError, setUnauthorizedHandler } from "../../../api/client";
 import type { LoginCredentials, RegisterCredentials, User } from "../types";
@@ -126,11 +127,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, [handleUnauthorized]);
 
   const finishAuthentication = useCallback(
-    async (result: { token: string; user: User }) => {
+    async (result: { token: string; user: User }, successMessage: string) => {
       localStorage.setItem(TOKEN_KEY, result.token);
       setToken(result.token);
       setModal(null);
       queryClient.setQueryData(["current-user"], result.user);
+      toast.success(successMessage);
 
       if (!result.user.profileComplete) {
         setNotice(
@@ -147,7 +149,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const login = useCallback(
     async (credentials: LoginCredentials) => {
       const result = await loginMutation.mutateAsync(credentials);
-      await finishAuthentication(result);
+      await finishAuthentication(result, "Welcome back!");
     },
     [finishAuthentication, loginMutation],
   );
@@ -155,15 +157,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const register = useCallback(
     async (credentials: RegisterCredentials) => {
       const result = await registerMutation.mutateAsync(credentials);
-      await finishAuthentication(result);
+      await finishAuthentication(result, "Your account is ready.");
     },
     [finishAuthentication, registerMutation],
   );
 
   const logout = useCallback(async () => {
+    let logoutConfirmed = true;
     try {
       if (token) await logoutMutation.mutateAsync();
     } catch {
+      logoutConfirmed = false;
       setNotice(
         "You have been signed out. The server session could not be confirmed.",
       );
@@ -174,6 +178,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       pendingAction.current = null;
       activeAction.current = null;
       queryClient.clear();
+      if (logoutConfirmed) toast.success("Signed out successfully.");
     }
   }, [logoutMutation, queryClient, token]);
 

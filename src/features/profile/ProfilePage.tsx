@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import type { ReactNode } from "react";
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import SiteFooter from "../../components/layout/SiteFooter";
@@ -101,7 +102,7 @@ export default function ProfilePage() {
       try {
         const updatedUser = await updateProfile.mutateAsync(values);
         form.reset(values);
-        setFormNotice("Profile saved.");
+        toast.success("Profile saved.");
         const routeState = location.state as {
           returnTo?: string;
           backgroundLocation?: unknown;

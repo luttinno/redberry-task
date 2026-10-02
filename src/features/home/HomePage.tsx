@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
+import { toast } from "react-toastify";
 import SiteHeader from "../../components/layout/SiteHeader";
 import { ErrorState } from "../../components/ui/ErrorState";
 import { useAuth } from "../auth/context/useAuth";
@@ -82,7 +83,6 @@ export default function HomePage() {
   const notifyMutation = useNotifyMovie();
   const [activeSlide, setActiveSlide] = useState(0);
   const [search, setSearch] = useState(initialSearch);
-  const [feedback, setFeedback] = useState("");
 
   const featuredMovies = featured.data ?? [];
   const activeIndex = featuredMovies.length
@@ -112,10 +112,9 @@ export default function HomePage() {
   }, [featuredMovies.length]);
 
   const requestNotification = (movie: Movie) => {
-    setFeedback("");
     requireAuth(async () => {
       await notifyMutation.mutateAsync(movie.id);
-      setFeedback(`We’ll let you know when ${movie.title} is available.`);
+      toast.success(`We’ll let you know when ${movie.title} is available.`);
     });
   };
 
@@ -351,17 +350,6 @@ export default function HomePage() {
               Arriving on the big screen
             </span>
           </div>
-          {feedback && (
-            <div
-              className="mb-4 flex items-center justify-between rounded-md border border-emerald-400/20 bg-emerald-400/10 px-4 py-3 text-xs text-emerald-200"
-              role="status"
-            >
-              <span>{feedback}</span>
-              <button aria-label="Dismiss" onClick={() => setFeedback("")}>
-                ×
-              </button>
-            </div>
-          )}
           {comingSoon.isError ? (
             <ErrorState
               message="We couldn’t load these movies."
