@@ -21,6 +21,7 @@ export function BookingShell({
     <Modal
       panelRef={dialogRef}
       onClose={onClose}
+      backdropClassName="auth-backdrop grid place-items-center p-4"
       className="relative flex max-h-[92vh] w-full max-w-5xl flex-col overflow-hidden rounded-2xl border border-white/8 bg-[#070c1c] p-4 text-white shadow-2xl sm:p-6"
       ariaLabelledBy="booking-dialog-title"
       closeButton={
