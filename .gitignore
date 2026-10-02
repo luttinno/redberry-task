@@ -35,5 +35,6 @@ ORDER-TICKETS.md
 PROFILES.md
 SCHEMA.md
 SESSIONS.md
+REFACTORING.md
 /assets/
 .env*

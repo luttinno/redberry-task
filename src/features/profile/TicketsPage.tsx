@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import SiteFooter from "../../components/layout/SiteFooter";
 import SiteHeader from "../../components/layout/SiteHeader";
+import { Modal } from "../../components/ui/Modal";
 import { ApiError } from "../../api/client";
 import type { TicketFilter, TicketOrder } from "../../api/tickets";
 import { useAuth } from "../auth/context/useAuth";
@@ -302,73 +303,70 @@ export default function TicketsPage() {
       <SiteFooter />
 
       {confirmOrder && (
-        <div
-          className="fixed inset-0 z-50 grid place-items-center bg-black/70 px-4 py-8 backdrop-blur-sm"
-          onMouseDown={(event) => {
-            if (
-              event.target === event.currentTarget &&
-              !refundMutation.isPending
-            ) {
+        <Modal
+          onClose={() => {
+            if (!refundMutation.isPending) {
               setConfirmOrder(null);
               setRefundError("");
             }
           }}
+          backdropClassName="fixed inset-0 z-50 grid place-items-center bg-black/70 px-4 py-8 backdrop-blur-sm"
+          className="relative w-full max-w-md rounded-xl border border-white/10 bg-[#0d1222] p-6 shadow-2xl"
+          ariaLabelledBy="refund-title"
+          closeButton={
+            <button
+              type="button"
+              aria-label="Close refund confirmation"
+              disabled={refundMutation.isPending}
+              className="absolute right-4 top-4 text-xl leading-none text-slate-400 hover:text-white disabled:opacity-50"
+              onClick={() => {
+                setConfirmOrder(null);
+                setRefundError("");
+              }}
+            >
+              ×
+            </button>
+          }
         >
-          <section
-            role="dialog"
-            aria-modal="true"
-            aria-labelledby="refund-title"
-            className="w-full max-w-md rounded-xl border border-white/10 bg-[#0d1222] p-6 shadow-2xl"
-          >
-            <div className="flex items-start justify-between gap-4">
-              <div>
-                <h2 id="refund-title" className="text-lg font-black">
-                  Refund tickets?
-                </h2>
-                <p className="mt-2 text-sm text-slate-400">
-                  Refund order {confirmOrder.reference} for{" "}
-                  {confirmOrder.tickets
-                    .map((ticket) => ticket.seatCode)
-                    .join(", ")}
-                  ?
-                </p>
-              </div>
-              <button
-                type="button"
-                aria-label="Close refund confirmation"
-                disabled={refundMutation.isPending}
-                className="text-xl leading-none text-slate-400 hover:text-white disabled:opacity-50"
-                onClick={() => setConfirmOrder(null)}
-              >
-                ×
-              </button>
-            </div>
-            {refundError && (
-              <p role="alert" className="mt-4 text-xs text-[#ff604c]">
-                {refundError}
+          <div className="flex items-start justify-between gap-4">
+            <div>
+              <h2 id="refund-title" className="text-lg font-black">
+                Refund tickets?
+              </h2>
+              <p className="mt-2 text-sm text-slate-400">
+                Refund order {confirmOrder.reference} for{" "}
+                {confirmOrder.tickets
+                  .map((ticket) => ticket.seatCode)
+                  .join(", ")}
+                ?
               </p>
-            )}
-            <div className="mt-6 flex justify-end gap-3">
-              <button
-                ref={cancelRef}
-                type="button"
-                disabled={refundMutation.isPending}
-                className="rounded-full bg-white/10 px-4 py-2 text-xs font-bold hover:bg-white/20 disabled:opacity-50"
-                onClick={() => setConfirmOrder(null)}
-              >
-                Keep tickets
-              </button>
-              <button
-                type="button"
-                disabled={refundMutation.isPending}
-                className="rounded-full bg-[#f23a23] px-4 py-2 text-xs font-bold hover:bg-[#d92e1a] disabled:opacity-50"
-                onClick={() => void confirmRefund()}
-              >
-                {refundMutation.isPending ? "Processing…" : "Confirm refund"}
-              </button>
             </div>
-          </section>
-        </div>
+          </div>
+          {refundError && (
+            <p role="alert" className="mt-4 text-xs text-[#ff604c]">
+              {refundError}
+            </p>
+          )}
+          <div className="mt-6 flex justify-end gap-3">
+            <button
+              ref={cancelRef}
+              type="button"
+              disabled={refundMutation.isPending}
+              className="rounded-full bg-white/10 px-4 py-2 text-xs font-bold hover:bg-white/20 disabled:opacity-50"
+              onClick={() => setConfirmOrder(null)}
+            >
+              Keep tickets
+            </button>
+            <button
+              type="button"
+              disabled={refundMutation.isPending}
+              className="rounded-full bg-[#f23a23] px-4 py-2 text-xs font-bold hover:bg-[#d92e1a] disabled:opacity-50"
+              onClick={() => void confirmRefund()}
+            >
+              {refundMutation.isPending ? "Processing…" : "Confirm refund"}
+            </button>
+          </div>
+        </Modal>
       )}
     </main>
   );
