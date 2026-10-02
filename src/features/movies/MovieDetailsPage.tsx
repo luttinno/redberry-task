@@ -3,6 +3,7 @@ import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import { ApiError } from "../../api/client";
 import SiteFooter from "../../components/layout/SiteFooter";
 import SiteHeader from "../../components/layout/SiteHeader";
+import { Button } from "../../components/ui/Button";
 import { ScreenLoader } from "../../components/ui/Spinner";
 import { useAuth } from "../auth/context/useAuth";
 import { rememberMovieVisit } from "../home/recentlyViewed";
@@ -165,12 +166,13 @@ export default function MovieDetailsPage() {
               : "Something went wrong."}
           </h1>
           {!isNotFound && (
-            <button
-              className="mx-auto mt-5 rounded-full bg-white/10 px-5 py-2.5 text-xs font-bold hover:bg-white/20"
+            <Button
+              variant="ghost"
+              className="mx-auto mt-5 bg-white/10 hover:bg-white/20"
               onClick={() => void movieQuery.refetch()}
             >
               Retry
-            </button>
+            </Button>
           )}
           <Link
             to="/"

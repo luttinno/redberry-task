@@ -1,5 +1,5 @@
 import type { UseFormReturn } from "react-hook-form";
-import { Spinner } from "../../../components/ui/Spinner";
+import { Button } from "../../../components/ui/Button";
 import type { LoginFormValues } from "../validation/authSchemas";
 import { AuthField } from "./AuthField";
 
@@ -53,19 +53,21 @@ export function LoginForm({
           {formNotice || notice}
         </p>
       )}
-      <button className="submit-button" type="submit" disabled={loginPending}>
-        {loginPending && <Spinner label="Logging in" />}
+      <Button type="submit" variant="primary" loading={loginPending}>
         {loginPending ? "Logging in…" : "Log in"}
-      </button>
+      </Button>
       <p className="switch-copy">
         Don’t have an account?{" "}
-        <button
+        <Button
           type="button"
+          variant="ghost"
+          size="sm"
+          className="h-auto bg-transparent px-0 text-[#ff604c] hover:bg-transparent hover:text-white"
           disabled={loginPending}
           onClick={onSwitchToRegister}
         >
           Sign up
-        </button>
+        </Button>
       </p>
     </form>
   );

@@ -94,42 +94,8 @@ button {
   white-space: nowrap;
 }
 
-.button {
-  min-height: 38px;
-  padding: 0 19px;
-  border: 1px solid transparent;
-  border-radius: 22px;
-  font-size: 12px;
-  font-weight: 700;
-  transition:
-    background 0.18s ease,
-    transform 0.18s ease;
-}
-
-.button:hover {
-  transform: translateY(-1px);
-}
-
-.button-primary {
-  color: #fff;
-  background: #fa321b;
-}
-
-.button-primary:hover,
-.submit-button:hover {
-  background: #df2916;
-}
-
-.submit-button:disabled,
-.close-button:disabled,
-.button:disabled {
+button:disabled {
   cursor: not-allowed;
-  opacity: 0.62;
-}
-
-.button-light {
-  color: #121725;
-  background: #f1f2f5;
 }
 
 .scene-copy {

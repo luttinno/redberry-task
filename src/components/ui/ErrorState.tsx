@@ -1,3 +1,5 @@
+import { Button } from "./Button";
+
 type ErrorStateProps = {
   message: string;
   onRetry: () => void;
@@ -8,7 +10,8 @@ const containerClasses = {
   inline:
     "flex min-h-24 flex-wrap items-center justify-between gap-4 rounded-lg border border-white/8 bg-white/3 px-5 py-4",
   compact: "flex flex-col items-start gap-3",
-  centered: "grid min-h-48 place-content-center justify-items-center gap-3 text-center",
+  centered:
+    "grid min-h-48 place-content-center justify-items-center gap-3 text-center",
 };
 
 const messageClasses = {
@@ -34,9 +37,15 @@ export function ErrorState({
       <p className={messageClasses[variant]} role="alert">
         {message}
       </p>
-      <button type="button" className={retryClasses[variant]} onClick={onRetry}>
+      <Button
+        type="button"
+        variant="ghost"
+        size="sm"
+        className={retryClasses[variant]}
+        onClick={onRetry}
+      >
         Retry
-      </button>
+      </Button>
     </div>
   );
 }

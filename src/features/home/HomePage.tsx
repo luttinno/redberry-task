@@ -2,8 +2,8 @@ import { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { toast } from "react-toastify";
 import SiteHeader from "../../components/layout/SiteHeader";
+import { Button } from "../../components/ui/Button";
 import { ErrorState } from "../../components/ui/ErrorState";
-import { Spinner } from "../../components/ui/Spinner";
 import { useAuth } from "../auth/context/useAuth";
 import { useHomeMovies, useNotifyMovie } from "../movies/useHomeMovies";
 import type { Movie } from "../movies/types";
@@ -143,12 +143,14 @@ export default function HomePage() {
               <p className="text-sm text-slate-200">
                 Featured films are temporarily unavailable.
               </p>
-              <button
-                className="mt-4 rounded-full bg-white/10 px-4 py-2 text-xs font-bold hover:bg-white/20"
+              <Button
+                variant="ghost"
+                size="sm"
+                className="mt-4 bg-white/10 hover:bg-white/20"
                 onClick={() => void featured.refetch()}
               >
                 Retry
-              </button>
+              </Button>
             </div>
           ) : currentFeature ? (
             <div
@@ -399,14 +401,20 @@ export default function HomePage() {
                       <span className="text-[9px] text-slate-400">
                         {formatReleaseDate(movie.releaseDate)}
                       </span>
-                      <button
-                        className="rounded-full border border-white/20 px-2.5 py-1 text-[9px] font-bold text-slate-200 transition hover:border-[#ff604c] hover:text-white disabled:cursor-not-allowed disabled:opacity-50"
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="h-7 px-2.5 text-[9px]"
                         disabled={
                           movie.isNotified ||
                           (notifyMutation.isPending &&
                             notifyMutation.variables === movie.id)
                         }
                         onClick={() => requestNotification(movie)}
+                        loading={
+                          notifyMutation.isPending &&
+                          notifyMutation.variables === movie.id
+                        }
                       >
                         {movie.isNotified
                           ? "Notified"
@@ -414,11 +422,7 @@ export default function HomePage() {
                               notifyMutation.variables === movie.id
                             ? "Saving…"
                             : "Notify me"}
-                        {notifyMutation.isPending &&
-                          notifyMutation.variables === movie.id && (
-                            <Spinner label="Saving notification" />
-                          )}
-                      </button>
+                      </Button>
                     </div>
                   </div>
                 </article>

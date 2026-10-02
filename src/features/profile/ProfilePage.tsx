@@ -6,8 +6,9 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import SiteFooter from "../../components/layout/SiteFooter";
 import SiteHeader from "../../components/layout/SiteHeader";
+import { Button } from "../../components/ui/Button";
 import { ErrorState } from "../../components/ui/ErrorState";
-import { ScreenLoader, Spinner } from "../../components/ui/Spinner";
+import { ScreenLoader } from "../../components/ui/Spinner";
 import { mapApiErrors } from "../forms/mapApiErrors";
 import { useAuth } from "../auth/context/useAuth";
 import { useUpdateProfile, useVenues } from "./useProfile";
@@ -165,12 +166,13 @@ export default function ProfilePage() {
             <p className="mt-2 text-sm text-slate-400">
               Your profile is available after authentication.
             </p>
-            <button
-              className="mt-6 rounded-full bg-[#f23a23] px-5 py-2.5 text-xs font-bold"
+            <Button
+              variant="primary"
+              className="mt-6"
               onClick={() => requireAuth(() => navigate("/profile"))}
             >
               Log in
-            </button>
+            </Button>
           </div>
         </section>
         <SiteFooter />
@@ -344,18 +346,20 @@ export default function ProfilePage() {
                 {formNotice}
               </p>
             )}
-            <button
+            <Button
               type="submit"
+              variant="primary"
+              size="md"
+              loading={updateProfile.isPending}
               disabled={
                 !form.formState.isDirty ||
                 !form.formState.isValid ||
                 updateProfile.isPending
               }
-              className="mt-1 w-fit rounded-full bg-[#f23a23] px-5 py-2.5 text-[10px] font-bold text-white transition hover:bg-[#d92e1a] disabled:cursor-not-allowed disabled:bg-[#3b3c49] disabled:text-slate-300"
+              className="mt-1 w-fit"
             >
-              {updateProfile.isPending && <Spinner label="Saving profile" />}
               {updateProfile.isPending ? "Saving…" : "Save changes"}
-            </button>
+            </Button>
           </form>
         </section>
       </div>

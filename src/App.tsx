@@ -7,6 +7,7 @@ import {
   type Location as RouterLocation,
 } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
+import { Button } from "./components/ui/Button";
 import { AuthModal } from "./features/auth/components/AuthModal";
 import { useAuth } from "./features/auth/context/useAuth";
 import HomePage from "./features/home/HomePage";
@@ -64,7 +65,15 @@ function App() {
         <aside className="session-notice" role="status">
           <span>{notice}</span>
           {token && status !== "authenticated" && (
-            <button onClick={() => void retrySessionRestore()}>Retry</button>
+            <Button
+              type="button"
+              variant="ghost"
+              size="sm"
+              className="h-auto bg-transparent px-0 text-[#ff604c] hover:bg-transparent hover:text-white"
+              onClick={() => void retrySessionRestore()}
+            >
+              Retry
+            </Button>
           )}
           <button
             className="notice-close"

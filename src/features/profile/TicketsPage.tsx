@@ -3,9 +3,9 @@ import { Link, NavLink, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import SiteFooter from "../../components/layout/SiteFooter";
 import SiteHeader from "../../components/layout/SiteHeader";
+import { Button } from "../../components/ui/Button";
 import { ErrorState } from "../../components/ui/ErrorState";
 import { Modal } from "../../components/ui/Modal";
-import { Spinner } from "../../components/ui/Spinner";
 import { ApiError } from "../../api/client";
 import type { TicketFilter, TicketOrder } from "../../api/tickets";
 import { useAuth } from "../auth/context/useAuth";
@@ -110,8 +110,10 @@ function TicketCard({
         </div>
         {order.isUpcoming && (
           <>
-            <button
+            <Button
               type="button"
+              variant="dark"
+              className="mt-4 w-full"
               disabled={!order.isRefundable}
               title={
                 !order.isRefundable
@@ -119,10 +121,9 @@ function TicketCard({
                   : undefined
               }
               onClick={() => onRefund(order)}
-              className="mt-4 h-10 rounded-full bg-[#343849] text-xs font-bold text-white transition hover:bg-[#41475c] disabled:cursor-not-allowed disabled:text-slate-500"
             >
               Refund
-            </button>
+            </Button>
             {!order.isRefundable && (
               <p className="mt-2 text-center text-[10px] text-slate-500">
                 Refund is no longer available.
@@ -227,16 +228,18 @@ export default function TicketsPage() {
               aria-label="Ticket history"
             >
               {(["upcoming", "past"] as const).map((tab) => (
-                <button
+                <Button
                   key={tab}
                   type="button"
                   role="tab"
                   aria-selected={filter === tab}
-                  className={`rounded-full px-4 py-2 text-xs font-bold capitalize transition ${filter === tab ? "bg-[#f23a23] text-white" : "text-slate-400 hover:text-white"}`}
+                  variant={filter === tab ? "primary" : "ghost"}
+                  size="sm"
+                  className={`h-8 rounded-full px-4 ${filter === tab ? "" : "bg-transparent text-slate-400 hover:bg-transparent hover:text-white"}`}
                   onClick={() => setFilter(tab)}
                 >
                   {tab}
-                </button>
+                </Button>
               ))}
             </div>
           </div>
@@ -244,13 +247,15 @@ export default function TicketsPage() {
           {status === "guest" ? (
             <div className="rounded-lg border border-white/8 bg-white/3 px-6 py-12 text-center">
               <p className="text-sm font-bold">Sign in to view your tickets</p>
-              <button
+              <Button
                 type="button"
-                className="mt-5 rounded-full bg-[#f23a23] px-4 py-2 text-xs font-bold hover:bg-[#d92e1a]"
+                variant="primary"
+                size="sm"
+                className="mt-5"
                 onClick={() => openAuth("login")}
               >
                 Log in
-              </button>
+              </Button>
             </div>
           ) : status === "loading" || (user && tickets.isPending) ? (
             <div className="grid gap-4" aria-label="Loading tickets">
@@ -347,24 +352,26 @@ export default function TicketsPage() {
             </p>
           )}
           <div className="mt-6 flex justify-end gap-3">
-            <button
+            <Button
               ref={cancelRef}
               type="button"
+              variant="ghost"
+              size="sm"
               disabled={refundMutation.isPending}
-              className="rounded-full bg-white/10 px-4 py-2 text-xs font-bold hover:bg-white/20 disabled:opacity-50"
               onClick={() => setConfirmOrder(null)}
             >
               Keep tickets
-            </button>
-            <button
+            </Button>
+            <Button
               type="button"
+              variant="primary"
+              size="sm"
+              loading={refundMutation.isPending}
               disabled={refundMutation.isPending}
-              className="rounded-full bg-[#f23a23] px-4 py-2 text-xs font-bold hover:bg-[#d92e1a] disabled:opacity-50"
               onClick={() => void confirmRefund()}
             >
-              {refundMutation.isPending && <Spinner label="Processing refund" />}
               {refundMutation.isPending ? "Processing…" : "Confirm refund"}
-            </button>
+            </Button>
           </div>
         </Modal>
       )}

@@ -1,5 +1,6 @@
 import { type FormEvent } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { Button } from "../ui/Button";
 import { useAuth } from "../../features/auth/context/useAuth";
 import { Spinner } from "../ui/Spinner";
 import { AccountMenu } from "./AccountMenu";
@@ -84,18 +85,20 @@ export default function SiteHeader({
         </div>
       ) : (
         <div className="order-2 flex shrink-0 items-center gap-2">
-          <button
-            className="rounded-full bg-[#f23a23] px-4 py-2 text-[10px] font-bold uppercase tracking-[0.08em] text-white transition hover:bg-[#d92e1a]"
+          <Button
+            variant="primary"
+            size="sm"
             onClick={() => openAuth("register")}
           >
             Sign up
-          </button>
-          <button
-            className="rounded-full bg-white px-4 py-2 text-[10px] font-bold uppercase tracking-[0.08em] text-[#101321] transition hover:bg-slate-200"
+          </Button>
+          <Button
+            variant="secondary"
+            size="sm"
             onClick={() => openAuth("login")}
           >
             Log in
-          </button>
+          </Button>
         </div>
       )}
     </header>
