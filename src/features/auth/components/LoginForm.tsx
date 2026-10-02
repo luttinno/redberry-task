@@ -1,4 +1,5 @@
 import type { UseFormReturn } from "react-hook-form";
+import { Spinner } from "../../../components/ui/Spinner";
 import type { LoginFormValues } from "../validation/authSchemas";
 import { AuthField } from "./AuthField";
 
@@ -53,6 +54,7 @@ export function LoginForm({
         </p>
       )}
       <button className="submit-button" type="submit" disabled={loginPending}>
+        {loginPending && <Spinner label="Logging in" />}
         {loginPending ? "Logging in…" : "Log in"}
       </button>
       <p className="switch-copy">

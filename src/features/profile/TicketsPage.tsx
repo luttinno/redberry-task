@@ -5,6 +5,7 @@ import SiteFooter from "../../components/layout/SiteFooter";
 import SiteHeader from "../../components/layout/SiteHeader";
 import { ErrorState } from "../../components/ui/ErrorState";
 import { Modal } from "../../components/ui/Modal";
+import { Spinner } from "../../components/ui/Spinner";
 import { ApiError } from "../../api/client";
 import type { TicketFilter, TicketOrder } from "../../api/tickets";
 import { useAuth } from "../auth/context/useAuth";
@@ -361,6 +362,7 @@ export default function TicketsPage() {
               className="rounded-full bg-[#f23a23] px-4 py-2 text-xs font-bold hover:bg-[#d92e1a] disabled:opacity-50"
               onClick={() => void confirmRefund()}
             >
+              {refundMutation.isPending && <Spinner label="Processing refund" />}
               {refundMutation.isPending ? "Processing…" : "Confirm refund"}
             </button>
           </div>

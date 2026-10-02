@@ -3,6 +3,7 @@ import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import { ApiError } from "../../api/client";
 import SiteFooter from "../../components/layout/SiteFooter";
 import SiteHeader from "../../components/layout/SiteHeader";
+import { ScreenLoader } from "../../components/ui/Spinner";
 import { useAuth } from "../auth/context/useAuth";
 import { rememberMovieVisit } from "../home/recentlyViewed";
 import { getNextSevenDates } from "../sessions/sessionFilters";
@@ -141,17 +142,9 @@ export default function MovieDetailsPage() {
 
   if (movieQuery.isPending) {
     return (
-      <main className="min-h-screen animate-pulse bg-[#070c1c] text-white">
+      <main className="min-h-screen bg-[#070c1c] text-white">
         <SiteHeader searchValue={search} onSearchChange={setSearch} />
-        <div className="mx-auto grid max-w-7xl gap-8 px-5 py-12 sm:px-8 lg:grid-cols-[260px_minmax(0,1fr)]">
-          <div className="aspect-2/3 rounded-xl bg-white/8" />
-          <div className="space-y-5 pt-10">
-            <div className="h-10 max-w-xl rounded bg-white/8" />
-            <div className="h-4 max-w-2xl rounded bg-white/8" />
-            <div className="h-4 max-w-lg rounded bg-white/8" />
-            <div className="h-32 rounded bg-white/8" />
-          </div>
-        </div>
+        <ScreenLoader label="Loading movie details…" />
       </main>
     );
   }

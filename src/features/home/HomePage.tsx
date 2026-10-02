@@ -3,6 +3,7 @@ import { Link, useLocation } from "react-router-dom";
 import { toast } from "react-toastify";
 import SiteHeader from "../../components/layout/SiteHeader";
 import { ErrorState } from "../../components/ui/ErrorState";
+import { Spinner } from "../../components/ui/Spinner";
 import { useAuth } from "../auth/context/useAuth";
 import { useHomeMovies, useNotifyMovie } from "../movies/useHomeMovies";
 import type { Movie } from "../movies/types";
@@ -413,6 +414,10 @@ export default function HomePage() {
                               notifyMutation.variables === movie.id
                             ? "Saving…"
                             : "Notify me"}
+                        {notifyMutation.isPending &&
+                          notifyMutation.variables === movie.id && (
+                            <Spinner label="Saving notification" />
+                          )}
                       </button>
                     </div>
                   </div>

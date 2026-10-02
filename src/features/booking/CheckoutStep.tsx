@@ -2,6 +2,7 @@ import type { UseFormReturn } from "react-hook-form";
 import type { SeatHold } from "./types";
 import type { CheckoutValues } from "./checkoutSchema";
 import type { FormEventHandler, ReactNode } from "react";
+import { Spinner } from "../../components/ui/Spinner";
 
 function formatPrice(value: number) {
   return `₾${new Intl.NumberFormat("en", { maximumFractionDigits: 2 }).format(value)}`;
@@ -170,6 +171,7 @@ export default function CheckoutStep({
             disabled={busy || !form.formState.isValid}
             className="w-full rounded-full bg-[#f23a1b] px-4 py-2.5 text-[11px] font-bold text-white hover:bg-[#d92e1a] disabled:cursor-not-allowed disabled:bg-[#505261]"
           >
+            {busy && <Spinner label="Processing payment" />}
             {busy ? "Processing…" : "Pay & Complete Order"}
           </button>
         </div>

@@ -1,6 +1,7 @@
 import { useState, type FormEvent } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../features/auth/context/useAuth";
+import { Spinner } from "../ui/Spinner";
 
 type SiteHeaderProps = {
   searchValue: string;
@@ -59,7 +60,8 @@ export default function SiteHeader({
       </form>
 
       {status === "loading" ? (
-        <span className="hidden text-[10px] text-slate-400 sm:block">
+        <span className="hidden items-center gap-2 text-[10px] text-slate-400 sm:flex">
+          <Spinner label="Restoring account" />
           Restoring…
         </span>
       ) : user ? (
@@ -152,6 +154,7 @@ export default function SiteHeader({
                   disabled={logoutPending}
                   onClick={() => void logout()}
                 >
+                  {logoutPending && <Spinner label="Logging out" />}
                   {logoutPending ? "Logging out…" : "Log out"}
                 </button>
               </div>

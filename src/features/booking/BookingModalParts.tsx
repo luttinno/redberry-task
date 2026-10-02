@@ -1,6 +1,7 @@
 import { useEffect, useRef } from "react";
 import type { ReactNode, RefObject } from "react";
 import { Modal } from "../../components/ui/Modal";
+import { Spinner } from "../../components/ui/Spinner";
 
 export function BookingShell({
   title,
@@ -54,6 +55,7 @@ export function AccessPanel({
   actionLabel,
   onAction,
   onClose,
+  loading = false,
   children,
 }: {
   title: string;
@@ -61,6 +63,7 @@ export function AccessPanel({
   actionLabel?: string;
   onAction?: () => void;
   onClose: () => void;
+  loading?: boolean;
   children?: ReactNode;
 }) {
   const panelRef = useRef<HTMLElement>(null);
@@ -92,6 +95,7 @@ export function AccessPanel({
       }
       backdropClassName="fixed inset-0 z-40 grid place-items-center bg-[#030610]/75 p-4 backdrop-blur-sm"
     >
+      {loading && <Spinner size="lg" label={title} />}
       <h2 id="booking-access-title" className="text-lg font-black">
         {title}
       </h2>

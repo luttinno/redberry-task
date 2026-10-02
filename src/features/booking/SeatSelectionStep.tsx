@@ -1,4 +1,5 @@
 import type { FilterOptions } from "../../api/filterOptions";
+import { Spinner } from "../../components/ui/Spinner";
 import type { BookingSeat, SeatMap } from "./types";
 
 type TicketType = FilterOptions["ticketTypes"][number];
@@ -229,6 +230,7 @@ export default function SeatSelectionStep({
             onClick={onContinue}
             className="w-full rounded-full bg-[#f23a1b] px-4 py-2.5 text-[11px] font-bold text-white transition hover:bg-[#d92e1a] disabled:cursor-not-allowed disabled:bg-[#505261] disabled:text-slate-300"
           >
+            {busy && <Spinner label="Holding seats" />}
             {busy ? "Holding seats…" : "Next: Checkout"}
           </button>
         </div>

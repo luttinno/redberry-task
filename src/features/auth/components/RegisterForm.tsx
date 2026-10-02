@@ -1,4 +1,5 @@
 import type { UseFormReturn } from "react-hook-form";
+import { Spinner } from "../../../components/ui/Spinner";
 import {
   registerSchema,
   type RegisterFormValues,
@@ -135,6 +136,7 @@ export function RegisterForm({
         type="submit"
         disabled={registerPending}
       >
+        {registerPending && <Spinner label="Signing up" />}
         {registerPending ? "Signing up…" : "Sign up"}
       </button>
       <p className="switch-copy">

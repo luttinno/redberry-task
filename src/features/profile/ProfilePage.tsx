@@ -7,6 +7,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import SiteFooter from "../../components/layout/SiteFooter";
 import SiteHeader from "../../components/layout/SiteHeader";
 import { ErrorState } from "../../components/ui/ErrorState";
+import { ScreenLoader, Spinner } from "../../components/ui/Spinner";
 import { mapApiErrors } from "../forms/mapApiErrors";
 import { useAuth } from "../auth/context/useAuth";
 import { useUpdateProfile, useVenues } from "./useProfile";
@@ -143,11 +144,7 @@ export default function ProfilePage() {
           onSearchChange={setSearch}
           onSearchSubmit={onSearchSubmit}
         />
-        <div className="mx-auto max-w-375 animate-pulse px-6 py-10 sm:px-10">
-          <div className="h-6 w-40 rounded bg-white/10" />
-          <div className="mt-8 h-9 max-w-135 rounded bg-white/10" />
-          <div className="mt-8 h-72 max-w-135 rounded bg-white/4" />
-        </div>
+        <ScreenLoader label="Restoring your account…" />
       </main>
     );
   }
@@ -356,6 +353,7 @@ export default function ProfilePage() {
               }
               className="mt-1 w-fit rounded-full bg-[#f23a23] px-5 py-2.5 text-[10px] font-bold text-white transition hover:bg-[#d92e1a] disabled:cursor-not-allowed disabled:bg-[#3b3c49] disabled:text-slate-300"
             >
+              {updateProfile.isPending && <Spinner label="Saving profile" />}
               {updateProfile.isPending ? "Saving…" : "Save changes"}
             </button>
           </form>

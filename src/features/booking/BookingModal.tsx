@@ -467,7 +467,11 @@ export default function BookingModal() {
 
   if (status === "loading") {
     return (
-      <AccessPanel title="Restoring your account…" onClose={closeAccessGate} />
+      <AccessPanel
+        title="Restoring your account…"
+        onClose={closeAccessGate}
+        loading
+      />
     );
   }
   if (status !== "authenticated" || !user) {
@@ -507,7 +511,13 @@ export default function BookingModal() {
     );
   }
   if (!accessGranted) {
-    return <AccessPanel title="Preparing booking…" onClose={closeAccessGate} />;
+    return (
+      <AccessPanel
+        title="Preparing booking…"
+        onClose={closeAccessGate}
+        loading
+      />
+    );
   }
 
   if (optionsQuery.isError) {
