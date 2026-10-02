@@ -5,23 +5,9 @@ import SiteFooter from "../../components/layout/SiteFooter";
 import SiteHeader from "../../components/layout/SiteHeader";
 import { useAuth } from "../auth/context/useAuth";
 import { rememberMovieVisit } from "../home/recentlyViewed";
+import { getNextSevenDates } from "../sessions/sessionFilters";
 import type { MovieSession } from "./types";
 import { useMovieDetail, useMovieSessions } from "./useMovieDetails";
-
-function getNextSevenDays() {
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
-  return Array.from({ length: 7 }, (_, index) => {
-    const date = new Date(today);
-    date.setDate(today.getDate() + index);
-    return {
-      value: `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`,
-      weekday: new Intl.DateTimeFormat("en", { weekday: "short" }).format(date),
-      day: new Intl.DateTimeFormat("en", { day: "2-digit" }).format(date),
-      month: new Intl.DateTimeFormat("en", { month: "short" }).format(date),
-    };
-  });
-}
 
 function getAge(dateOfBirth: string | null) {
   if (!dateOfBirth) return null;
@@ -119,7 +105,7 @@ export default function MovieDetailsPage() {
   const { movieId = "" } = useParams();
   const navigate = useNavigate();
   const { user, status } = useAuth();
-  const dates = getNextSevenDays();
+  const dates = getNextSevenDates();
   const [selectedDate, setSelectedDate] = useState(dates[0].value);
   const [search, setSearch] = useState("");
   const movieQuery = useMovieDetail(movieId);

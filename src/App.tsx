@@ -8,6 +8,8 @@ import HomePage from "./features/home/HomePage";
 import MovieDetailsPage from "./features/movies/MovieDetailsPage";
 import ProfilePage from "./features/profile/ProfilePage";
 import TicketsPage from "./features/profile/TicketsPage";
+import SessionsPage from "./features/sessions/SessionsPage";
+import { useFilterOptions } from "./features/sessions/useFilterOptions";
 import {
   loginSchema,
   registerSchema,
@@ -17,6 +19,7 @@ import {
 import "./App.css";
 
 function App() {
+  useFilterOptions();
   const {
     token,
     status,
@@ -164,10 +167,7 @@ function App() {
           path="/sessions/:sessionId/seats"
           element={<SeatSelectionRoutePlaceholder />}
         />
-        <Route
-          path="/sessions"
-          element={<PagePlaceholder title="Sessions" />}
-        />
+        <Route path="/sessions" element={<SessionsPage />} />
         <Route path="/profile" element={<ProfilePage />} />
         <Route path="/tickets" element={<TicketsPage />} />
         <Route path="*" element={<Navigate to="/" replace />} />

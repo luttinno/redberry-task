@@ -17,6 +17,12 @@ export interface MovieFormat {
   priceUplift: number;
 }
 
+export interface MovieLanguage {
+  id: number;
+  slug: string;
+  name: string;
+}
+
 export interface Venue {
   id: number;
   slug: string;
@@ -43,8 +49,7 @@ export interface Movie {
   formats: MovieFormat[];
 }
 
-export interface MovieDetail
-  extends Omit<Movie, "posterUrl" | "backdropUrl"> {
+export interface MovieDetail extends Omit<Movie, "posterUrl" | "backdropUrl"> {
   posterUrl: string | null;
   backdropUrl: string | null;
   synopsis: string;

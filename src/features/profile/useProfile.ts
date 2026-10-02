@@ -1,14 +1,11 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { filterOptionsApi } from "../../api/filterOptions";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { profileApi, type UpdateProfileInput } from "../../api/profile";
 import type { User } from "../auth/types";
+import { useFilterOptions } from "../sessions/useFilterOptions";
 
 export function useVenues() {
-  return useQuery({
-    queryKey: ["filter-options", "venues"],
-    queryFn: filterOptionsApi.getVenues,
-    staleTime: 30 * 60 * 1000,
-  });
+  const options = useFilterOptions();
+  return { ...options, data: options.data?.venues };
 }
 
 export function useUpdateProfile() {
