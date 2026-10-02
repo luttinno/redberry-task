@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import SiteFooter from "../../components/layout/SiteFooter";
 import SiteHeader from "../../components/layout/SiteHeader";
+import { ErrorState } from "../../components/ui/ErrorState";
 import { Modal } from "../../components/ui/Modal";
 import { ApiError } from "../../api/client";
 import type { TicketFilter, TicketOrder } from "../../api/tickets";
@@ -258,17 +259,12 @@ export default function TicketsPage() {
               ))}
             </div>
           ) : tickets.isError ? (
-            <div className="flex min-h-40 items-center justify-between gap-4 rounded-lg border border-white/10 bg-white/3 px-5 py-4 text-sm text-slate-300">
-              <span>
-                {tickets.error.message || "We couldn’t load your tickets."}
-              </span>
-              <button
-                className="font-bold text-[#ff604c] hover:text-white"
-                onClick={() => void tickets.refetch()}
-              >
-                Retry
-              </button>
-            </div>
+            <ErrorState
+              message={
+                tickets.error.message || "We couldn’t load your tickets."
+              }
+              onRetry={() => void tickets.refetch()}
+            />
           ) : tickets.data?.length ? (
             <div className="grid gap-4">
               {tickets.data.map((order) => (

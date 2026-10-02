@@ -6,10 +6,11 @@ import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import { ApiError } from "../../api/client";
 import { bookingApi } from "../../api/booking";
 import type { TicketOrder } from "../../api/tickets";
+import { ErrorState } from "../../components/ui/ErrorState";
 import { mapApiErrors } from "../forms/mapApiErrors";
 import { useAuth } from "../auth/context/useAuth";
 import { useFilterOptions } from "../sessions/useFilterOptions";
-import { AccessPanel, BookingShell, ErrorPanel } from "./BookingModalParts";
+import { AccessPanel, BookingShell } from "./BookingModalParts";
 import CheckoutStep from "./CheckoutStep";
 import { checkoutSchema, type CheckoutValues } from "./checkoutSchema";
 import ConfirmationStep from "./ConfirmationStep";
@@ -516,9 +517,10 @@ export default function BookingModal() {
         dialogRef={dialogRef}
         title="Booking unavailable"
       >
-        <ErrorPanel
+        <ErrorState
           message="Booking options could not be loaded."
           onRetry={() => void optionsQuery.refetch()}
+          variant="centered"
         />
       </BookingShell>
     );
@@ -541,7 +543,7 @@ export default function BookingModal() {
         dialogRef={dialogRef}
         title="Session unavailable"
       >
-        <ErrorPanel
+        <ErrorState
           message={
             sessionQuery.error instanceof ApiError &&
             sessionQuery.error.status === 404
@@ -549,6 +551,7 @@ export default function BookingModal() {
               : "Session information could not be loaded."
           }
           onRetry={() => void sessionQuery.refetch()}
+          variant="centered"
         />
       </BookingShell>
     );
@@ -659,9 +662,10 @@ export default function BookingModal() {
       ) : seatsQuery.isPending || !options ? (
         <div className="h-72 animate-pulse rounded-lg bg-white/5" />
       ) : seatsQuery.isError || !seatMap ? (
-        <ErrorPanel
+        <ErrorState
           message="The seat map could not be loaded."
           onRetry={() => void seatsQuery.refetch()}
+          variant="centered"
         />
       ) : (
         <SeatSelectionStep

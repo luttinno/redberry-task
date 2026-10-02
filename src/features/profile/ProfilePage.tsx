@@ -5,6 +5,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import SiteFooter from "../../components/layout/SiteFooter";
 import SiteHeader from "../../components/layout/SiteHeader";
+import { ErrorState } from "../../components/ui/ErrorState";
 import { mapApiErrors } from "../forms/mapApiErrors";
 import { useAuth } from "../auth/context/useAuth";
 import { useUpdateProfile, useVenues } from "./useProfile";
@@ -332,13 +333,11 @@ export default function ProfilePage() {
                 ))}
               </select>
               {venues.isError && (
-                <button
-                  className="justify-self-start text-[10px] font-bold text-[#ff604c]"
-                  type="button"
-                  onClick={() => void venues.refetch()}
-                >
-                  Could not load venues. Retry.
-                </button>
+                <ErrorState
+                  message="Could not load venues."
+                  onRetry={() => void venues.refetch()}
+                  variant="compact"
+                />
               )}
             </ProfileField>
 

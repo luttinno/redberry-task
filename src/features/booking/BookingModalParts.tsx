@@ -118,26 +118,3 @@ export function AccessPanel({
     </Modal>
   );
 }
-
-export function ErrorPanel({
-  message,
-  onRetry,
-}: {
-  message: string;
-  onRetry: () => void;
-}) {
-  return (
-    <div className="grid min-h-48 place-content-center justify-items-center gap-3 text-center">
-      <p className="text-sm text-slate-300" role="alert">
-        {message}
-      </p>
-      <button
-        type="button"
-        onClick={onRetry}
-        className="rounded-full bg-white/10 px-4 py-2 text-[10px] font-bold hover:bg-white/15"
-      >
-        Retry
-      </button>
-    </div>
-  );
-}

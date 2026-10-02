@@ -7,6 +7,7 @@ import {
 } from "react-router-dom";
 import SiteFooter from "../../components/layout/SiteFooter";
 import SiteHeader from "../../components/layout/SiteHeader";
+import { ErrorState } from "../../components/ui/ErrorState";
 import type { MovieSession } from "../movies/types";
 import {
   getAvailableFormats,
@@ -222,15 +223,11 @@ export default function SessionsPage() {
             <div className="rounded-lg bg-[#1c2030] p-4 sm:p-5">
               <h2 className="mb-5 text-sm font-black">Filters</h2>
               {optionsQuery.isError ? (
-                <div className="text-xs text-slate-300">
-                  <p>Filter options could not be loaded.</p>
-                  <button
-                    className="mt-3 font-bold text-[#ff604c]"
-                    onClick={() => void optionsQuery.refetch()}
-                  >
-                    Retry
-                  </button>
-                </div>
+                <ErrorState
+                  message="Filter options could not be loaded."
+                  onRetry={() => void optionsQuery.refetch()}
+                  variant="compact"
+                />
               ) : optionsQuery.isPending ? (
                 <div
                   className="animate-pulse space-y-5"
@@ -384,15 +381,10 @@ export default function SessionsPage() {
                 ))}
               </div>
             ) : sessionsQuery.isError ? (
-              <div className="flex flex-wrap items-center justify-between gap-4 rounded-lg border border-white/8 bg-white/3 px-5 py-5 text-sm text-slate-300">
-                <span>Sessions could not be loaded.</span>
-                <button
-                  className="font-bold text-[#ff604c] hover:text-white"
-                  onClick={() => void sessionsQuery.refetch()}
-                >
-                  Retry
-                </button>
-              </div>
+              <ErrorState
+                message="Sessions could not be loaded."
+                onRetry={() => void sessionsQuery.refetch()}
+              />
             ) : visibleGroups.length === 0 ? (
               <div className="rounded-lg border border-white/8 bg-white/3 px-5 py-8 text-center">
                 <p className="text-sm font-bold">No sessions found</p>

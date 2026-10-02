@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import SiteHeader from "../../components/layout/SiteHeader";
+import { ErrorState } from "../../components/ui/ErrorState";
 import { useAuth } from "../auth/context/useAuth";
 import { useHomeMovies, useNotifyMovie } from "../movies/useHomeMovies";
 import type { Movie } from "../movies/types";
@@ -61,20 +62,6 @@ function MovieCard({ movie }: { movie: Movie }) {
         </div>
       </div>
     </article>
-  );
-}
-
-function SectionError({ onRetry }: { onRetry: () => void }) {
-  return (
-    <div className="flex min-h-24 items-center justify-between gap-4 rounded-lg border border-white/10 bg-white/3 px-5 py-4 text-sm text-slate-300">
-      <span>We couldn’t load these movies.</span>
-      <button
-        className="font-bold text-[#ff604c] hover:text-white"
-        onClick={onRetry}
-      >
-        Retry
-      </button>
-    </div>
   );
 }
 
@@ -329,7 +316,10 @@ export default function HomePage() {
             </Link>
           </div>
           {nowPlaying.isError ? (
-            <SectionError onRetry={() => void nowPlaying.refetch()} />
+            <ErrorState
+              message="We couldn’t load these movies."
+              onRetry={() => void nowPlaying.refetch()}
+            />
           ) : nowPlaying.isPending ? (
             <div className="flex gap-4 overflow-hidden">
               {Array.from({ length: 6 }, (_, index) => (
@@ -373,7 +363,10 @@ export default function HomePage() {
             </div>
           )}
           {comingSoon.isError ? (
-            <SectionError onRetry={() => void comingSoon.refetch()} />
+            <ErrorState
+              message="We couldn’t load these movies."
+              onRetry={() => void comingSoon.refetch()}
+            />
           ) : comingSoon.isPending ? (
             <div className="flex gap-3 overflow-hidden">
               {Array.from({ length: 4 }, (_, index) => (
