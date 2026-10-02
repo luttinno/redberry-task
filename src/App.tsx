@@ -1,13 +1,20 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, useWatch, type UseFormRegisterReturn } from "react-hook-form";
-import { Link, Navigate, Route, Routes, useParams } from "react-router-dom";
+import {
+  Navigate,
+  Route,
+  Routes,
+  useLocation,
+  type Location as RouterLocation,
+} from "react-router-dom";
 import { mapApiErrors } from "./features/forms/mapApiErrors";
 import { useAuth } from "./features/auth/context/useAuth";
 import HomePage from "./features/home/HomePage";
 import MovieDetailsPage from "./features/movies/MovieDetailsPage";
 import ProfilePage from "./features/profile/ProfilePage";
 import TicketsPage from "./features/profile/TicketsPage";
+import BookingModal from "./features/booking/BookingModal";
 import SessionsPage from "./features/sessions/SessionsPage";
 import { useFilterOptions } from "./features/sessions/useFilterOptions";
 import {
@@ -20,6 +27,10 @@ import "./App.css";
 
 function App() {
   useFilterOptions();
+  const location = useLocation();
+  const backgroundLocation = (
+    location.state as { backgroundLocation?: RouterLocation } | null
+  )?.backgroundLocation;
   const {
     token,
     status,
@@ -160,18 +171,20 @@ function App() {
 
   return (
     <div className="relative min-h-screen">
-      <Routes>
+      <Routes location={backgroundLocation ?? location}>
         <Route path="/" element={<HomePage />} />
         <Route path="/movies/:movieId" element={<MovieDetailsPage />} />
-        <Route
-          path="/sessions/:sessionId/seats"
-          element={<SeatSelectionRoutePlaceholder />}
-        />
+        <Route path="/sessions/:sessionId/seats" element={<BookingModal />} />
         <Route path="/sessions" element={<SessionsPage />} />
         <Route path="/profile" element={<ProfilePage />} />
         <Route path="/tickets" element={<TicketsPage />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
+      {backgroundLocation && (
+        <Routes>
+          <Route path="/sessions/:sessionId/seats" element={<BookingModal />} />
+        </Routes>
+      )}
 
       {notice && !isOpen && (
         <aside className="session-notice" role="status">
@@ -393,45 +406,6 @@ function App() {
         </section>
       )}
     </div>
-  );
-}
-
-function SeatSelectionRoutePlaceholder() {
-  const { sessionId } = useParams();
-  return (
-    <PagePlaceholder
-      title="Seat selection"
-      description={`Session ${sessionId} is ready to book. Seat selection is not available yet.`}
-    />
-  );
-}
-
-function PagePlaceholder({
-  title,
-  description = "This page will be built from its design reference.",
-}: {
-  title: string;
-  description?: string;
-}) {
-  return (
-    <main className="grid min-h-screen place-items-center bg-[#070c1c] px-6 text-white">
-      <div className="text-center">
-        <Link
-          to="/"
-          className="text-xs font-bold uppercase tracking-[.18em] text-[#ff604c]"
-        >
-          Kino XII
-        </Link>
-        <h1 className="mt-5 text-3xl font-black">{title}</h1>
-        <p className="mt-2 text-sm text-slate-400">{description}</p>
-        <Link
-          to="/"
-          className="mt-6 inline-flex rounded-full bg-white/10 px-5 py-2.5 text-xs font-bold hover:bg-white/20"
-        >
-          Back to home
-        </Link>
-      </div>
-    </main>
   );
 }
 

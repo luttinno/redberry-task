@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import { ApiError } from "../../api/client";
 import SiteFooter from "../../components/layout/SiteFooter";
 import SiteHeader from "../../components/layout/SiteHeader";
@@ -116,6 +116,7 @@ function SessionCard({
 
 export default function MovieDetailsPage() {
   const { movieId = "" } = useParams();
+  const location = useLocation();
   const navigate = useNavigate();
   const { user, status } = useAuth();
   const dates = getNextSevenDates();
@@ -344,7 +345,9 @@ export default function MovieDetailsPage() {
                         session={session}
                         disabled={isUnderage || status === "loading"}
                         onSelect={() =>
-                          navigate(`/sessions/${session.id}/seats`)
+                          navigate(`/sessions/${session.id}/seats`, {
+                            state: { backgroundLocation: location },
+                          })
                         }
                       />
                     ))}

@@ -1,5 +1,10 @@
 import { useEffect, useState } from "react";
-import { Link, useNavigate, useSearchParams } from "react-router-dom";
+import {
+  Link,
+  useLocation,
+  useNavigate,
+  useSearchParams,
+} from "react-router-dom";
 import SiteFooter from "../../components/layout/SiteFooter";
 import SiteHeader from "../../components/layout/SiteHeader";
 import type { MovieSession } from "../movies/types";
@@ -94,6 +99,7 @@ function FilterCheckbox({
 }
 
 export default function SessionsPage() {
+  const location = useLocation();
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
   const [search, setSearch] = useState("");
@@ -450,7 +456,9 @@ export default function SessionsPage() {
                             key={session.id}
                             session={session}
                             onSelect={() =>
-                              navigate(`/sessions/${session.id}/seats`)
+                              navigate(`/sessions/${session.id}/seats`, {
+                                state: { backgroundLocation: location },
+                              })
                             }
                           />
                         ))}

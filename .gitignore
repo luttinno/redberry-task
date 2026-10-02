@@ -36,3 +36,4 @@ PROFILES.md
 SCHEMA.md
 SESSIONS.md
 /assets/
+.env*

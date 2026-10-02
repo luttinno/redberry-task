@@ -192,7 +192,7 @@ button {
 
 .auth-backdrop {
   position: fixed;
-  z-index: 2;
+  z-index: 60;
   inset: 0;
   background: rgba(3, 6, 14, 0.68);
   backdrop-filter: blur(3px);
@@ -200,7 +200,7 @@ button {
 
 .auth-panel {
   position: fixed;
-  z-index: 3;
+  z-index: 70;
   top: 50%;
   left: 50%;
   width: min(403px, calc(100vw - 32px));
@@ -210,6 +210,14 @@ button {
   background: #070c1c;
   box-shadow: 0 20px 50px -10px rgba(0, 0, 0, 0.72);
   transform: translate(-50%, -50%);
+}
+
+.seat-held {
+  background: repeating-linear-gradient(
+    135deg,
+    #343748 0 7px,
+    #242738 7px 14px
+  );
 }
 
 .auth-panel-signup {

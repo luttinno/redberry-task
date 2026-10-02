@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import type { ReactNode } from "react";
-import { NavLink, useNavigate } from "react-router-dom";
+import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import SiteFooter from "../../components/layout/SiteFooter";
@@ -60,6 +60,7 @@ const invalidInputClass = "!border-[#f23825]";
 
 export default function ProfilePage() {
   const { user, status, requireAuth } = useAuth();
+  const location = useLocation();
   const venues = useVenues();
   const updateProfile = useUpdateProfile();
   const navigate = useNavigate();
@@ -97,9 +98,26 @@ export default function ProfilePage() {
     setFormNotice("");
     requireAuth(async () => {
       try {
-        await updateProfile.mutateAsync(values);
+        const updatedUser = await updateProfile.mutateAsync(values);
         form.reset(values);
         setFormNotice("Profile saved.");
+        const routeState = location.state as {
+          returnTo?: string;
+          backgroundLocation?: unknown;
+        } | null;
+        const returnTo = routeState?.returnTo;
+        if (
+          updatedUser.profileComplete &&
+          returnTo?.startsWith("/sessions/") &&
+          returnTo.endsWith("/seats")
+        ) {
+          navigate(returnTo, {
+            replace: true,
+            state: routeState?.backgroundLocation
+              ? { backgroundLocation: routeState.backgroundLocation }
+              : null,
+          });
+        }
       } catch (error) {
         setFormNotice(
           mapApiErrors(error, form.setError, {

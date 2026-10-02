@@ -1,17 +1,20 @@
 export interface ApiErrorPayload {
   message?: string;
   errors?: Record<string, string[]>;
+  contested?: string[];
 }
 
 export class ApiError extends Error {
   readonly status: number;
   readonly errors?: Record<string, string[]>;
+  readonly contested?: string[];
 
   constructor(status: number, payload: ApiErrorPayload) {
     super(payload.message ?? `Request failed (${status})`);
     this.name = "ApiError";
     this.status = status;
     this.errors = payload.errors;
+    this.contested = payload.contested;
   }
 }
 
