@@ -5,6 +5,7 @@ import {
   useNavigate,
   useSearchParams,
 } from "react-router-dom";
+import ResponsivePagination from "react-responsive-pagination";
 import SiteFooter from "../../components/layout/SiteFooter";
 import SiteHeader from "../../components/layout/SiteHeader";
 import { ErrorState } from "../../components/ui/ErrorState";
@@ -460,55 +461,27 @@ export default function SessionsPage() {
                 </div>
 
                 {pageCount > 1 && (
-                  <nav
-                    className="mt-7 flex flex-wrap items-center justify-center gap-2"
-                    aria-label="Session pages"
-                  >
-                    <button
-                      type="button"
-                      aria-label="Previous page"
-                      disabled={filters.page <= 1}
-                      onClick={() =>
-                        updateFilters({ page: filters.page - 1 }, false)
-                      }
-                      className="grid size-9 place-items-center rounded-full bg-[#1c2030] text-slate-200 disabled:cursor-not-allowed disabled:opacity-40"
-                    >
-                      ‹
-                    </button>
-                    {Array.from(
-                      { length: pageCount },
-                      (_, index) => index + 1,
-                    ).map((page) => (
-                      <button
-                        key={page}
-                        type="button"
-                        aria-current={
-                          filters.page === page ? "page" : undefined
-                        }
-                        onClick={() => updateFilters({ page }, false)}
-                        className={`grid size-9 place-items-center rounded-full text-xs font-bold ${
-                          filters.page === page
-                            ? "bg-[#f23a23] text-white"
-                            : "text-slate-300 hover:bg-white/8"
-                        }`}
-                      >
-                        {page}
-                      </button>
-                    ))}
-                    <button
-                      type="button"
-                      aria-label="Next page"
-                      disabled={filters.page >= pageCount}
-                      onClick={() =>
-                        updateFilters({ page: filters.page + 1 }, false)
-                      }
-                      className="grid size-9 place-items-center rounded-full bg-[#1c2030] text-slate-200 disabled:cursor-not-allowed disabled:opacity-40"
-                    >
-                      ›
-                    </button>
-                    <span className="basis-full text-center text-[10px] text-slate-500">
+                  <nav className="mt-7" aria-label="Session pages">
+                    <ResponsivePagination
+                      current={filters.page}
+                      total={pageCount}
+                      onPageChange={(page) => updateFilters({ page }, false)}
+                      className="sessions-pagination"
+                      pageItemClassName="page-item"
+                      pageLinkClassName="page-link"
+                      activeItemClassName="active"
+                      inactiveItemClassName=""
+                      disabledItemClassName="disabled"
+                      previousLabel="‹"
+                      nextLabel="›"
+                      ariaPreviousLabel="Previous page"
+                      ariaNextLabel="Next page"
+                      linkHref="omit"
+                      renderNav="button"
+                    />
+                    <p className="mt-2 text-center text-[10px] text-slate-500">
                       Page {filters.page} of {pageCount}
-                    </span>
+                    </p>
                   </nav>
                 )}
               </>
