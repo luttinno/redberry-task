@@ -69,7 +69,7 @@ export default function SeatSelectionStep({
   const adultSlug = ticketTypes.find((ticket) => ticket.slug === "adult")?.slug;
 
   return (
-    <div className="grid min-h-0 gap-5 lg:grid-cols-[minmax(0,1fr)_260px]">
+    <div className="grid min-h-0 gap-5 lg:grid-cols-[minmax(0,1fr)_220px]">
       <section className="min-w-0">
         <div className="mb-4 rounded-full bg-[#292c3d] py-2 text-center text-[10px] font-black uppercase tracking-wide text-slate-200">
           Screen
@@ -148,12 +148,9 @@ export default function SeatSelectionStep({
         </div>
       </section>
 
-      <aside className="flex min-h-0 flex-col border-t border-white/8 pt-4 lg:border-l lg:border-t-0 lg:pl-5 lg:pt-0">
+      <aside className="flex min-h-0 flex-col border-t border-white/8 pt-4 lg:border-l lg:border-t-0 lg:pl-4 lg:pt-0">
         <div className="mb-3">
-          <h3 className="text-sm font-black">Your seats · Max {maxSeats}</h3>
-          <p className="mt-1 text-[10px] leading-4 text-slate-400">
-            Pick up to {maxSeats} seats. Each seat can have its own ticket type.
-          </p>
+          <h3 className="text-xs font-black">Your seats · Max {maxSeats}</h3>
         </div>
         {notice && (
           <p
@@ -174,40 +171,50 @@ export default function SeatSelectionStep({
           </p>
         ))}
         <div className="min-h-0 flex-1 space-y-2 overflow-y-auto">
-          {summary.map(({ seat, section, price }) => (
-            <div key={seat.id} className="rounded-lg bg-[#1d2030] p-3">
-              <div className="flex items-center justify-between gap-2 text-[10px]">
+          {summary.map(({ seat, price }) => (
+            <div key={seat.id} className="rounded-lg bg-[#1d2030] p-2">
+              <div className="flex items-center justify-between gap-2 text-[9px]">
                 <span className="text-slate-400">
                   Seat <strong className="ml-1 text-white">{seat.code}</strong>
                 </span>
-                <strong>{formatPrice(price)}</strong>
+                <strong className="ml-auto text-white">
+                  {formatPrice(price)}
+                </strong>
                 <button
                   type="button"
                   aria-label={`Remove seat ${seat.code}`}
                   onClick={() => onToggleSeat(seat)}
-                  className="text-slate-500 hover:text-white"
+                  className="px-0.5 text-slate-500 hover:text-white"
                 >
                   ×
                 </button>
               </div>
-              <div className="mt-2 flex items-center justify-between gap-2">
-                <span className="truncate text-[9px] text-slate-500">
-                  {section}
-                </span>
-                <select
-                  aria-label={`Ticket type for seat ${seat.code}`}
-                  value={selected[seat.id] ?? adultSlug ?? ""}
-                  onChange={(event) =>
-                    onChangeTicket(seat.id, event.target.value)
-                  }
-                  className="max-w-36 rounded-full bg-[#2a2d3e] px-2 py-1.5 text-[9px] text-white outline-none focus-visible:ring-1 focus-visible:ring-[#ff604c]"
-                >
-                  {availableTickets.map((item) => (
-                    <option key={item.id} value={item.slug}>
-                      {item.name} · {Math.round(item.priceRatio * 100)}%
-                    </option>
-                  ))}
-                </select>
+              <div
+                aria-label={`Ticket type for seat ${seat.code}`}
+                role="radiogroup"
+                className="mt-2 flex flex-wrap items-center justify-center gap-1"
+              >
+                {availableTickets.map((item) => {
+                  const isSelected =
+                    (selected[seat.id] ?? adultSlug ?? "") === item.slug;
+                  return (
+                    <button
+                      key={item.id}
+                      type="button"
+                      role="radio"
+                      aria-checked={isSelected}
+                      aria-label={`${item.name} ${Math.round(item.priceRatio * 100)}%`}
+                      onClick={() => onChangeTicket(seat.id, item.slug)}
+                      className={`booking-ticket-pill min-w-0 flex-1 whitespace-nowrap rounded-full px-1 py-1.5 font-semibold transition focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#ff604c] ${
+                        isSelected
+                          ? "bg-[#f23a1b] text-white"
+                          : "bg-[#2a2d3e] text-slate-200 hover:bg-[#383b4d]"
+                      }`}
+                    >
+                      {item.name} {Math.round(item.priceRatio * 100)}%
+                    </button>
+                  );
+                })}
               </div>
             </div>
           ))}
@@ -228,7 +235,7 @@ export default function SeatSelectionStep({
             type="button"
             disabled={summary.length === 0 || invalidSeats.length > 0 || busy}
             onClick={onContinue}
-            className="w-full rounded-full bg-[#f23a1b] px-4 py-2.5 text-[11px] font-bold text-white transition hover:bg-[#d92e1a] disabled:cursor-not-allowed disabled:bg-[#505261] disabled:text-slate-300"
+            className="w-full rounded-full bg-[#f23a1b] px-4 py-2.5 text-[10px] font-bold uppercase tracking-wide text-white shadow-[0_4px_16px_rgba(242,58,27,0.18)] transition hover:bg-[#d92e1a] disabled:cursor-not-allowed disabled:bg-[#505261] disabled:text-slate-300 disabled:shadow-none"
           >
             {busy && <Spinner label="Holding seats" />}
             {busy ? "Holding seats…" : "Next: Checkout"}

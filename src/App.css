@@ -64,6 +64,11 @@ button {
   cursor: pointer;
 }
 
+.booking-ticket-pill {
+  font-size: 7px;
+  line-height: 1;
+}
+
 .cinema-shell {
   position: relative;
   min-height: 100vh;

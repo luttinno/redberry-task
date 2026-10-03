@@ -603,39 +603,50 @@ export default function BookingModal() {
 
   const dateLabel = formatSessionDate(session.date);
   const header = (
-    <div className="flex min-w-0 flex-wrap items-center gap-x-3 gap-y-1">
-      <div className="min-w-0 flex-1">
-        <h2 className="truncate text-base font-black" id="booking-dialog-title">
-          {session.movie.title}
-        </h2>
-        <p className="mt-1 truncate text-[10px] text-slate-400">
-          {session.venue.name} · Hall {session.hall.name} · {dateLabel} ·{" "}
-          {session.time} · {session.format.name} · {session.language.name}
-        </p>
+    <div className="flex min-w-0 flex-1 flex-col gap-3">
+      <div className="flex min-w-0 items-start gap-3">
+        <div className="min-w-0 flex-1">
+          <h2
+            className="truncate text-base font-black"
+            id="booking-dialog-title"
+          >
+            {session.movie.title}
+          </h2>
+          <p className="mt-1 truncate text-[10px] text-slate-400">
+            {session.venue.name} · Hall {session.hall.name} · {dateLabel} ·{" "}
+            {session.time} · {session.format.name} · {session.language.name}
+          </p>
+        </div>
+        {hold && step !== "confirmation" && (
+          <div
+            aria-label={`Seats held, ${Math.floor(remainingSeconds / 60)} minutes ${remainingSeconds % 60} seconds remaining`}
+            className="shrink-0 rounded-lg bg-[#202232] px-3 py-1.5 text-center"
+          >
+            <span className="block text-[8px] font-bold uppercase tracking-wider text-slate-400">
+              Seats held
+            </span>
+            <span className="text-xs font-black tabular-nums">
+              {Math.floor(remainingSeconds / 60)}:
+              {String(remainingSeconds % 60).padStart(2, "0")}
+            </span>
+          </div>
+        )}
       </div>
-      <div className="flex min-w-48 overflow-hidden rounded-full bg-[#202232] text-[9px] font-bold">
+      <div
+        aria-label="Booking progress"
+        className="flex w-full overflow-hidden rounded-full bg-[#202232] text-[9px] font-bold uppercase tracking-wider"
+      >
         <span
-          className={`flex-1 px-4 py-2 text-center ${step === "seats" ? "bg-[#f23a1b] text-white" : "text-slate-400"}`}
+          className={`flex-1 px-4 py-2 text-center transition-colors ${step === "seats" ? "bg-[#f23a1b] text-white" : "text-slate-400"}`}
         >
           1. Seats
         </span>
         <span
-          className={`flex-1 px-4 py-2 text-center ${step === "checkout" ? "bg-[#f23a1b] text-white" : "text-slate-400"}`}
+          className={`flex-1 px-4 py-2 text-center transition-colors ${step === "checkout" ? "bg-[#f23a1b] text-white" : "text-slate-400"}`}
         >
           2. Checkout
         </span>
       </div>
-      {hold && step !== "confirmation" && (
-        <div className="rounded-md bg-[#202232] px-3 py-2 text-center">
-          <span className="block text-[8px] font-bold uppercase text-slate-400">
-            Hold timer · {options?.holdMinutes} min
-          </span>
-          <span className="text-xs font-black tabular-nums">
-            {Math.floor(remainingSeconds / 60)}:
-            {String(remainingSeconds % 60).padStart(2, "0")}
-          </span>
-        </div>
-      )}
     </div>
   );
 
