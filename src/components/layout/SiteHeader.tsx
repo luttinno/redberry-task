@@ -71,7 +71,7 @@ export default function SiteHeader({
   };
 
   return (
-    <header className="relative z-20 mx-auto flex min-h-16 max-w-[1800px] flex-wrap items-center gap-3 px-4 py-2 sm:flex-nowrap sm:px-8 lg:gap-8 lg:px-12">
+    <header className="relative z-20 mx-auto flex h-16 w-full max-w-[1800px] items-center gap-8 px-4 sm:px-8 lg:px-12">
       <Link
         to="/"
         className="hidden shrink-0 items-center text-[15px] font-black tracking-widest text-white sm:inline-flex"
@@ -87,7 +87,7 @@ export default function SiteHeader({
       </nav>
 
       <div
-        className="relative order-1 min-w-0 flex-1 sm:order-0 sm:max-w-135 lg:ml-auto"
+        className="relative min-w-0 flex-1 sm:max-w-135 sm:ml-auto"
         onBlur={(event) => {
           if (
             !(event.relatedTarget instanceof Node) ||
