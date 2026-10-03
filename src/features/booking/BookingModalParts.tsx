@@ -8,7 +8,7 @@ export function BookingShell({
   header,
   dialogRef,
   onClose,
-  isClosing = false,
+  // isClosing = false,
   children,
 }: {
   title: string;
@@ -23,21 +23,21 @@ export function BookingShell({
       panelRef={dialogRef}
       onClose={onClose}
       backdropClassName="auth-backdrop grid place-items-center p-4"
-      className="relative flex max-h-[92vh] w-full max-w-5xl flex-col overflow-hidden rounded-2xl border border-white/8 bg-[#070c1c] p-4 text-white shadow-2xl sm:p-6"
+      className="relative flex max-h-[92vh] w-full max-w-5xl flex-col overflow-hidden rounded-2xl border border-white/8 bg-[#070c1c] p-4 text-white shadow-2xl sm:p-4"
       ariaLabelledBy="booking-dialog-title"
-      closeButton={
-        <button
-          type="button"
-          aria-label="Close booking"
-          disabled={isClosing}
-          onClick={onClose}
-          className="absolute right-4 top-4 grid size-7 place-items-center rounded-full text-lg text-slate-400 hover:bg-white/8 hover:text-white disabled:opacity-50"
-        >
-          ×
-        </button>
-      }
+      // closeButton={
+      //   <button
+      //     type="button"
+      //     aria-label="Close booking"
+      //     disabled={isClosing}
+      //     onClick={onClose}
+      //     className="absolute right-4 top-4 grid size-7 place-items-center rounded-full text-lg text-slate-400 hover:bg-white/8 hover:text-white disabled:opacity-50"
+      //   >
+      //     ×
+      //   </button>
+      // }
     >
-      <div className="mb-4 flex shrink-0 items-start gap-4 border-b border-white/8 pb-4 pr-8">
+      <div className="mb-4 flex shrink-0 items-start gap-4">
         {header ?? (
           <h2 id="booking-dialog-title" className="text-base font-black">
             {title}

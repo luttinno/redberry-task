@@ -634,7 +634,7 @@ export default function BookingModal() {
       </div>
       <div
         aria-label="Booking progress"
-        className="flex w-full overflow-hidden rounded-full bg-[#202232] text-[9px] font-bold uppercase tracking-wider"
+        className="flex w-175 overflow-hidden rounded-full bg-[#202232] text-[9px] font-bold uppercase tracking-wider"
       >
         <span
           className={`flex-1 px-4 py-2 text-center transition-colors ${step === "seats" ? "bg-[#f23a1b] text-white" : "text-slate-400"}`}

@@ -69,7 +69,7 @@ export default function SeatSelectionStep({
   const adultSlug = ticketTypes.find((ticket) => ticket.slug === "adult")?.slug;
 
   return (
-    <div className="grid min-h-0 gap-5 lg:grid-cols-[minmax(0,1fr)_220px]">
+    <div className="grid min-h-0 gap-5 lg:grid-cols-[700px_minmax(0,1fr)]">
       <section className="min-w-0">
         <div className="mb-4 rounded-full bg-[#292c3d] py-2 text-center text-[10px] font-black uppercase tracking-wide text-slate-200">
           Screen
@@ -80,7 +80,7 @@ export default function SeatSelectionStep({
               <h3 className="mb-2 text-[10px] font-bold uppercase tracking-wider text-slate-400">
                 {section.name}
               </h3>
-              <div className="space-y-2">
+              <div className="space-y-2 justify-items-center">
                 {section.rows.map((row) => (
                   <div
                     key={`${section.name}-${row.label}`}
@@ -139,7 +139,7 @@ export default function SeatSelectionStep({
             </section>
           ))}
         </div>
-        <div className="mt-5 flex flex-wrap gap-x-4 gap-y-2 text-[9px] text-slate-400">
+        <div className="mt-5 flex flex-wrap justify-center gap-x-4 gap-y-2 text-[9px] text-slate-400">
           <LegendSwatch label="Available" className="bg-[#202333]" />
           <LegendSwatch label="Selected" className="bg-[#f23a1b]" />
           <LegendSwatch label="Sold" className="bg-[#171a29]" />

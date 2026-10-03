@@ -31,7 +31,7 @@ export default function CheckoutStep({
   const errors = form.formState.errors;
 
   return (
-    <div className="grid min-h-0 gap-5 lg:grid-cols-[minmax(0,1fr)_260px]">
+    <div className="grid min-h-0 px-1 gap-5 lg:grid-cols-[minmax(0,1fr)_260px]">
       <form
         id="checkout-form"
         noValidate
