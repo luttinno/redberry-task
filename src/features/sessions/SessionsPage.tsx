@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   Link,
   useLocation,
@@ -19,6 +19,7 @@ import {
 } from "./sessionFilters";
 import { useFilterOptions } from "./useFilterOptions";
 import { useSessions } from "./useSessions";
+import chevronDown from "../../assets/chevron-down.svg";
 
 function formatRuntime(minutes: number) {
   const hours = Math.floor(minutes / 60);
@@ -203,6 +204,24 @@ export default function SessionsPage() {
     (count, group) => count + group.sessions.length,
     0,
   );
+  const [sortOpen, setSortOpen] = useState(false);
+  const sortRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!sortOpen) return;
+
+    const handleClickOutside = (event: MouseEvent) => {
+      if (sortRef.current && !sortRef.current.contains(event.target as Node)) {
+        setSortOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [sortOpen]);
 
   return (
     <main className="min-h-screen bg-[#070c1c] text-white">
@@ -343,23 +362,55 @@ export default function SessionsPage() {
                     ? "No sessions found"
                     : "Sessions"}
               </p>
-              <label className="flex items-center gap-2 text-[10px] text-slate-400">
-                Sort:
-                <select
-                  value={filters.sort}
-                  disabled={!options || optionsQuery.isPending}
-                  onChange={(event) =>
-                    updateFilters({ sort: event.target.value })
-                  }
-                  className="max-w-56 rounded-md border border-white/10 bg-[#1c2030] px-2.5 py-2 text-[10px] font-bold text-white outline-none focus-visible:border-[#ff604c]"
-                >
-                  {(options?.sorts ?? []).map((sort) => (
-                    <option key={sort.id} value={sort.id}>
-                      {sort.label}
-                    </option>
-                  ))}
-                </select>
-              </label>
+              <div className="relative flex items-center gap-2 text-[10px] text-slate-400">
+                <span>Sort:</span>
+
+                <div ref={sortRef} className="relative">
+                  <button
+                    type="button"
+                    disabled={!options || optionsQuery.isPending}
+                    onClick={() => setSortOpen((open) => !open)}
+                    className="flex h-8 min-w-40 items-center justify-between rounded-md border border-white/10 bg-[#1c2030] px-2.5 text-[10px] font-bold text-white outline-none transition hover:border-white/20 focus:border-[#ff604c] disabled:cursor-not-allowed disabled:opacity-50"
+                  >
+                    <span>
+                      {
+                        options?.sorts.find((sort) => sort.id === filters.sort)
+                          ?.label
+                      }
+                    </span>
+
+                    <img
+                      src={chevronDown}
+                      alt=""
+                      className={`ml-2 h-4 w-4 transition-transform ${
+                        sortOpen ? "rotate-180" : ""
+                      }`}
+                    />
+                  </button>
+
+                  {sortOpen && (
+                    <div className="absolute right-0 top-full z-50 mt-1 w-full min-w-40 overflow-hidden rounded-md border border-white/10 bg-[#1c2030] shadow-xl">
+                      {(options?.sorts ?? []).map((sort) => (
+                        <button
+                          key={sort.id}
+                          type="button"
+                          onClick={() => {
+                            updateFilters({ sort: sort.id });
+                            setSortOpen(false);
+                          }}
+                          className={`block w-full px-3 py-2 text-left text-[10px] font-bold transition ${
+                            filters.sort === sort.id
+                              ? "bg-[#ff604c] text-white"
+                              : "text-slate-200 hover:bg-white/10"
+                          }`}
+                        >
+                          {sort.label}
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </div>
             </div>
 
             {sessionsQuery.isPending || optionsQuery.isPending ? (
