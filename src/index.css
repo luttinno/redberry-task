@@ -28,7 +28,7 @@ body {
 
 button:focus-visible,
 a:focus-visible,
-input:focus-visible {
+input:not(.site-search-input):focus-visible {
   outline: 2px solid #fa6b55;
   outline-offset: 3px;
 }

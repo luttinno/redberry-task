@@ -27,6 +27,23 @@ export function useHomeMovies() {
   return { featured, nowPlaying, comingSoon };
 }
 
+export function useSearchMovies(enabled: boolean) {
+  const nowPlaying = useQuery({
+    queryKey: movieQueryKeys.nowPlaying,
+    queryFn: movieApi.getNowPlaying,
+    enabled,
+    staleTime: 5 * 60 * 1000,
+  });
+  const comingSoon = useQuery({
+    queryKey: movieQueryKeys.comingSoon,
+    queryFn: movieApi.getComingSoon,
+    enabled,
+    staleTime: 5 * 60 * 1000,
+  });
+
+  return { nowPlaying, comingSoon };
+}
+
 export function useNotifyMovie() {
   const queryClient = useQueryClient();
   return useMutation({

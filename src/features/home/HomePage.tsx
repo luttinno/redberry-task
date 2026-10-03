@@ -86,20 +86,13 @@ export default function HomePage() {
   const [search, setSearch] = useState(initialSearch);
 
   const featuredMovies = featured.data ?? [];
+  const nowPlayingMovies = nowPlaying.data ?? [];
+  const comingSoonMovies = comingSoon.data ?? [];
   const activeIndex = featuredMovies.length
     ? activeSlide % featuredMovies.length
     : 0;
   const currentFeature = featuredMovies[activeIndex];
-  const allMovies = [...(nowPlaying.data ?? []), ...(comingSoon.data ?? [])];
-  const query = search.trim().toLocaleLowerCase();
-  const visibleNowPlaying =
-    nowPlaying.data?.filter((movie) =>
-      movie.title.toLocaleLowerCase().includes(query),
-    ) ?? [];
-  const visibleComingSoon =
-    comingSoon.data?.filter((movie) =>
-      movie.title.toLocaleLowerCase().includes(query),
-    ) ?? [];
+  const allMovies = [...nowPlayingMovies, ...comingSoonMovies];
   const recentMovies = getRecentMovieSlugs()
     .map((slug) => allMovies.find((movie) => movie.slug === slug))
     .filter((movie): movie is Movie => Boolean(movie));
@@ -328,9 +321,9 @@ export default function HomePage() {
                 <MovieSkeleton key={index} />
               ))}
             </div>
-          ) : visibleNowPlaying.length ? (
+          ) : nowPlayingMovies.length ? (
             <div className="flex gap-4 overflow-x-auto pb-3 [scrollbar-color:#35394b_transparent] scrollbar-thin">
-              {visibleNowPlaying.map((movie) => (
+              {nowPlayingMovies.map((movie) => (
                 <MovieCard key={movie.id} movie={movie} />
               ))}
             </div>
@@ -364,9 +357,9 @@ export default function HomePage() {
                 <MovieSkeleton key={index} landscape />
               ))}
             </div>
-          ) : visibleComingSoon.length ? (
+          ) : comingSoonMovies.length ? (
             <div className="flex gap-3 overflow-x-auto pb-3 [scrollbar-color:#35394b_transparent] scrollbar-thin">
-              {visibleComingSoon.map((movie) => (
+              {comingSoonMovies.map((movie) => (
                 <article
                   key={movie.id}
                   className="flex min-w-70 basis-90 items-center gap-3 rounded-lg bg-[#181c2b] p-2.5 sm:basis-97.5"
