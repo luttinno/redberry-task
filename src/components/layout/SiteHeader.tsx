@@ -1,4 +1,4 @@
-import { type FormEvent, useEffect, useState } from "react";
+import { type FormEvent, useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "../ui/Button";
 import { useAuth } from "../../features/auth/context/useAuth";
@@ -22,6 +22,7 @@ export default function SiteHeader({
   const navigate = useNavigate();
   const [searchOpen, setSearchOpen] = useState(false);
   const [debouncedSearch, setDebouncedSearch] = useState("");
+  const searchInputRef = useRef<HTMLInputElement>(null);
   const searchMovies = useSearchMovies(
     searchOpen && Boolean(debouncedSearch.trim()),
   );
@@ -54,6 +55,7 @@ export default function SiteHeader({
   const clearSearch = () => {
     onSearchChange("");
     setDebouncedSearch("");
+    searchInputRef.current?.focus();
   };
 
   const searchLoading =
@@ -114,6 +116,7 @@ export default function SiteHeader({
             <path d="m16 16 4.2 4.2" />
           </svg>
           <input
+            ref={searchInputRef}
             id="site-search"
             type="text"
             autoComplete="off"
